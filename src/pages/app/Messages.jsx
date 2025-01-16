@@ -760,7 +760,7 @@ const Messages = () => {
                 return (
                   <div
                     key={user}
-                    className="w-full h-[81px] px-4 flex justify-start items-center animate-pulse"
+                    className="w-full h-[81px] px-4 flex flex-shrink-0 justify-start items-center animate-pulse"
                   >
                     <div className="w-auto h-full flex justify-start items-center gap-2">
                       <span className="w-[45px] h-[45px] border border-gray-300 rounded-full flex items-center justify-center bg-gray-200"></span>
@@ -786,7 +786,7 @@ const Messages = () => {
                   }}
                   className={`w-full  h-[81px]  cursor-pointer border-b ${
                     uid == chatUser?.chatId && sender && "bg-[#FFF6F0]"
-                  } px-4 flex justify-start items-center`}
+                  } px-4 flex justify-start flex-shrink-0 items-center`}
                 >
                   <div className="w-auto h-full flex justify-start items-center gap-2">
                     <span className="w-[45px] h-[45px] border border-[#F85E00] rounded-full flex items-center justify-center ">
