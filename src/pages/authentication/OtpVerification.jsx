@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ForgotKey, OTPVector, USFlag } from "../../assets/export";
 import { Link, useNavigate } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
@@ -15,6 +15,26 @@ import { auth } from "../../firebase/firebase";
 const OtpVerification = () => {
   const [resendLoading, setResendLoading] = useState(false);
   const navigate = useNavigate();
+
+  const [timer, setTimer] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  useEffect(() => {
+    let interval;
+
+    if (isDisabled && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    }
+
+    if (timer === 0) {
+      setIsDisabled(false);
+      setTimer(null);
+    }
+
+    return () => clearInterval(interval); // Cleanup on unmount or when timer changes
+  }, [isDisabled, timer]);
   const resendEmailOTP = async () => {
     try {
       setResendLoading(true);
@@ -25,6 +45,8 @@ const OtpVerification = () => {
       });
 
       if (response?.data?.success) {
+        setTimer(60);
+        setIsDisabled(true);
         SuccessToast("OTP Resent successfully.");
         setResendLoading(false);
       }
@@ -109,16 +131,21 @@ const OtpVerification = () => {
                 }`}
                 placeholder="XXXXXX"
               />
-              <span
+              <button
+                type="button"
+                tabIndex={0}
+                disabled={resendLoading || loading || isDisabled}
                 onClick={resendEmailOTP}
                 className="absolute w-16 cursor-pointer h-[40px] rounded-[7px] top-1 right-1 bg-[#565656] text-white flex items-center justify-center text-sm font-medium"
               >
                 {resendLoading ? (
                   <FiLoader className="animate-spin text-lg " />
+                ) : timer ? (
+                  `00:${timer}`
                 ) : (
                   "Resend"
                 )}
-              </span>
+              </button>
             </div>
 
             {errors.otp && touched.otp ? (
@@ -135,13 +162,13 @@ const OtpVerification = () => {
           </button>
         </div>
       </div>
-      <Link
+      {/* <Link
         to={-1}
         className="text-sm font-medium text-white hover:no-underline hover:text-[#fff] flex items-center justify-center"
       >
         <IoIosArrowRoundBack className="text-[28px]" />
         <span>Back</span>
-      </Link>
+      </Link> */}
     </form>
   );
 };

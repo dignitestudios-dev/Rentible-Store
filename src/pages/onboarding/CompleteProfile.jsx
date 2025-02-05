@@ -17,6 +17,7 @@ import { ErrorToast, SuccessToast } from "../../components/global/Toaster";
 import { FiLoader } from "react-icons/fi";
 import GoogleMaps from "../../components/onboarding/GoogleMaps";
 import { AppContext } from "../../context/AppContext";
+import Cookies from "js-cookie";
 
 const CompleteProfile = () => {
   const {
@@ -158,6 +159,15 @@ const CompleteProfile = () => {
   useEffect(() => {
     values.address = userInput;
   }, [userInput]);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", function (e) {
+      e.preventDefault();
+      e.returnValue = "";
+      Cookies.remove("token");
+      navigate("/signup");
+    });
+  }, []);
   return (
     <form
       onSubmit={handleSubmit}
@@ -188,7 +198,7 @@ const CompleteProfile = () => {
               {coverImageUrl ? (
                 <img
                   src={coverImageUrl}
-                  className="w-full h-full object-contain rounded-t-[18px]"
+                  className="w-full h-full object-scale-down rounded-t-[18px]"
                 />
               ) : (
                 <div className="w-auto  cursor-pointer flex justify-start items-center gap-1">
@@ -222,7 +232,7 @@ const CompleteProfile = () => {
               {logoUrl ? (
                 <img
                   src={logoUrl}
-                  className="w-full h-full object-contain rounded-full"
+                  className="w-full h-full object-scale-down rounded-full"
                 />
               ) : (
                 <img
@@ -250,8 +260,11 @@ const CompleteProfile = () => {
               }}
             />
             {!errors?.profilePicture && !errors?.cover && (
-              <div className="w-full h-[43px] border-x-[0.8px] flex justify-end  items-end  border-[#D9D9D9]  ">
-                <span className="w-full h-[20px] bg-white blur-lg"></span>
+              <div className="w-full h-[43px] border-x-[0.8px] flex justify-end  items-center  border-[#D9D9D9]  ">
+                <div className="w-full pl-28  cursor-pointer flex justify-start items-center gap-1">
+                  <img src={CameraIcon} alt="camera_icon" />
+                  <p className="text-xs font-medium ">Add Profile Picture</p>
+                </div>
               </div>
             )}
           </div>
@@ -291,11 +304,13 @@ const CompleteProfile = () => {
                     <option value={values.state}>{values.state}</option>
                   )}
                   <option value={""}>--Select State--</option>
-                  {Object.keys(data).map((state) => (
-                    <option key={state} value={state}>
-                      {state}
-                    </option>
-                  ))}
+                  {Object.keys(data)
+                    .sort()
+                    .map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
                 </select>
                 {/* <button className="w-[15%] h-full rounded-r-[8px]  text-md text-[#959393] flex items-center justify-start">
                 <RxCaretDown />
@@ -328,11 +343,13 @@ const CompleteProfile = () => {
                   )}
                   <option value={""}>--Select City--</option>
                   {values.state &&
-                    data[values.state].map((city) => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))}
+                    data[values.state]
+                      .sort() // Sort the cities alphabetically
+                      .map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
                 </select>
                 {/* <button className="w-[15%] h-full rounded-r-[8px]  text-md text-[#959393] flex items-center justify-start">
                 <RxCaretDown />
@@ -466,14 +483,6 @@ const CompleteProfile = () => {
         <span>Next</span>
         {loading && <FiLoader className="animate-spin text-lg " />}
       </button>
-
-      <Link
-        to={-1}
-        className="text-sm font-medium text-black hover:no-underline hover:text-black mt-5 flex items-center justify-center"
-      >
-        <IoIosArrowRoundBack className="text-[28px]" />
-        <span>Back</span>
-      </Link>
     </form>
   );
 };

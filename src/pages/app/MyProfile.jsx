@@ -71,7 +71,7 @@ const MyProfile = () => {
               "https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
             }
             alt=""
-            className="w-full h-full rounded-t-[18px] bg-gray-200 object-contain"
+            className="w-full h-full rounded-t-[18px] bg-gray-200 object-scale-down"
           />
           <span className="w-[90px] lg:w-[144px] h-[90px] lg:h-[144px] absolute -bottom-11 left-2 lg:left-8 bg-white rounded-full border border-[#F85E00] flex items-center justify-center">
             <img
@@ -80,7 +80,7 @@ const MyProfile = () => {
                 "https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
               }
               alt=""
-              className="w-[80px] lg:w-[132px] h-[80px] lg:h-[132px] rounded-full bg-gray-200 object-contain"
+              className="w-[80px] lg:w-[132px] h-[80px] lg:h-[132px] rounded-full bg-gray-200 object-scale-down"
             />
           </span>
 
@@ -115,7 +115,7 @@ const MyProfile = () => {
               <span className="text-[14px] font-normal leading-[24px]">
                 Email Address
               </span>
-              <span className="text-[14px] font-normal text-[#818181] leading-[23px]">
+              <span className="text-[14px] w-40 break-words font-normal text-[#818181] leading-[23px]">
                 {profile?.email || "N/A"}
               </span>
             </div>

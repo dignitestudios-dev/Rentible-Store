@@ -123,15 +123,6 @@ function GoogleMaps({ state, address, setLatLng, setAddress }) {
           center={center}
           zoom={25}
           onClick={(e) => handleMapClick(e)}
-          options={{
-            styles: [
-              {
-                // featureType: "landscape",
-                // elementType: "geometry",
-                stylers: [{ hue: "#f85e00" }, { saturation: 50 }],
-              },
-            ],
-          }}
         >
           {/* Render a marker for the user */}
           <Marker
@@ -141,8 +132,8 @@ function GoogleMaps({ state, address, setLatLng, setAddress }) {
               lng: longitude,
             }}
             icon={{
-              url: "/store.png", // Path to your custom marker
-              scaledSize: new google.maps.Size(20, 20), // Adjust width and height as needed
+              url: "/map_marker.png", // Path to your custom marker
+              scaledSize: new google.maps.Size(50, 50), // Adjust width and height as needed
             }}
           ></Marker>
         </GoogleMap>

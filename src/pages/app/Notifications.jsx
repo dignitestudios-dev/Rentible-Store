@@ -322,7 +322,9 @@ const Notifications = () => {
               <div className="w-full h-24 rounded-t-[15px] bg-gray-200 animate-pulse"></div>
             ))
           ) : data?.length < 1 ? (
-            <div>No notifications available.</div>
+            <div className="w-full h-96 flex items-center justify-center text-lg">
+              No notifications available.
+            </div>
           ) : (
             data.map((notification) => (
               <SwipeableNotification

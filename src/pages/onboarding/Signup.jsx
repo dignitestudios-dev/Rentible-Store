@@ -182,6 +182,28 @@ const Signup = () => {
     }
   }, []);
 
+  const formatPhoneNumberInput = (input) => {
+    const cleaned = input.replace(/\D/g, ""); // Remove all non-numeric characters
+
+    if (cleaned.length > 3 && cleaned.length <= 6) {
+      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
+    } else if (cleaned.length > 6) {
+      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(
+        6,
+        10
+      )}`;
+    } else if (cleaned.length > 0) {
+      return `(${cleaned}`;
+    }
+    return cleaned;
+  };
+
+  // Handle raw phone number update
+  const handlePhoneChange = (e) => {
+    const rawValue = e.target.value.replace(/\D/g, ""); // Extract plain number
+    handleChange({ target: { name: e.target.name, value: rawValue } }); // Update raw value
+  };
+
   return (
     <form
       onSubmit={(e) => {
@@ -254,11 +276,12 @@ const Signup = () => {
               type="text"
               id="phone"
               name="phone"
-              value={values.phone}
-              onChange={handleChange}
-              maxLength={10}
+              value={formatPhoneNumberInput(values.phone)} // Display formatted number
+              onChange={handlePhoneChange} // Update with raw number
+              maxLength={14} // Adjust for formatted length
               onBlur={handleBlur}
-              className={`w-full h-[49px] border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
+              autoComplete="off" // Disable autofill
+              className={`w-full h-[49px] border-[0.8px] bg-[#F8F8F899] outline-none rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
                 errors?.phone && touched?.phone
                   ? "border-red-500"
                   : "border-[#D9D9D9]"
@@ -324,18 +347,20 @@ const Signup = () => {
           </span>
         </div>
 
-        <div className="w-full flex justify-center capitalize items-center text-[16px] font-normal text-black">
+        <div className="w-full flex justify-center capitalize items-center text-center text-[16px] font-normal text-black">
           <span>
-            I agree the{" "}
+            I agree to the{" "}
             <Link
-              to={"/terms-and-conditions"}
+              to={"https://www.rentibles.com/terms"}
+              target="_blank"
               className="text-[#F85E00] hover:no-underline hover:text-[#F85E00]"
             >
               terms & conditions
             </Link>{" "}
             &{" "}
             <Link
-              to={"/privacy-policy"}
+              to={"https://www.rentibles.com/privacy"}
+              target="_blank"
               className="text-[#F85E00] hover:no-underline hover:text-[#F85E00]"
             >
               privacy policy

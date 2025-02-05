@@ -48,7 +48,13 @@ const Timer = ({ dropOffEpoch }) => {
       timeRemaining.minutes === 0 &&
       timeRemaining.seconds === 0
         ? "00:00"
-        : timeDisplay}
+        : [
+            timeRemaining.days > 0 && `${timeRemaining.days}d`,
+            timeRemaining.hours > 0 && `${timeRemaining.hours}h`,
+            timeRemaining.minutes > 0 && `${timeRemaining.minutes}m`,
+          ]
+            .filter(Boolean) // Remove falsy values (e.g., `false` or `undefined`)
+            .join(" ") + " left"}
     </span>
   );
 };

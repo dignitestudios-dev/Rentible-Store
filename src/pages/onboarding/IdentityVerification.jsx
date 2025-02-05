@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BigCameraIcon,
   CameraIcon,
@@ -9,14 +9,17 @@ import {
 import { RxCaretDown } from "react-icons/rx";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import CompletionSuccess from "./CompletionSuccess";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { identityVerificationValues } from "../../data/identityVerification";
 import { identityVerificationSchema } from "../../schema/identityVerificationSchema";
 import { FiLoader } from "react-icons/fi";
 import { ErrorToast, SuccessToast } from "../../components/global/Toaster";
 import axios from "../../axios";
+import Cookies from "js-cookie";
+
 const IdentityVerification = () => {
+  const navigate = useNavigate();
   const [veirified, setVerified] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -157,6 +160,15 @@ const IdentityVerification = () => {
       }
     },
   });
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", function (e) {
+      e.preventDefault();
+      e.returnValue = "";
+      Cookies.remove("token");
+      navigate("/signup");
+    });
+  }, []);
   return (
     <form
       onSubmit={handleSubmit}
@@ -393,13 +405,6 @@ const IdentityVerification = () => {
         {loading && <FiLoader className="animate-spin text-lg " />}
       </button>
 
-      <Link
-        to={-1}
-        className="text-sm font-medium  text-black hover:no-underline hover:text-black mt-5 flex items-center justify-center"
-      >
-        <IoIosArrowRoundBack className="text-[28px]" />
-        <span>Back</span>
-      </Link>
       {veirified && <CompletionSuccess />}
     </form>
   );

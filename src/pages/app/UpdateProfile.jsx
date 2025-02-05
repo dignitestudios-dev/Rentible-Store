@@ -20,6 +20,7 @@ import { AppContext } from "../../context/AppContext";
 import { updateProfileValues } from "../../data/updateProfile";
 import { updateProfileSchema } from "../../schema/updateProfileSchema";
 import EditProfileModal from "../../components/app/profile/EditProfileModal";
+import { BsCamera } from "react-icons/bs";
 
 const UpdateProfile = () => {
   const location = useLocation();
@@ -213,11 +214,13 @@ const UpdateProfile = () => {
                   <>
                     <img
                       src={coverImageUrl}
-                      className="w-full h-full object-contain rounded-t-[18px]"
+                      className="w-full h-full object-scale-down rounded-t-[18px]"
                     />
                     <div className="w-auto absolute bottom-2 right-2  cursor-pointer flex justify-start items-center gap-1">
-                      <img src={CameraIcon} alt="camera_icon" />
-                      <p className="text-xs font-medium ">Update Cover Image</p>
+                      <span className="w-6 h-6 flex items-center justify-center rounded-full bg-orange-500">
+                        <BsCamera className="text-white text-md" />
+                      </span>
+                      {/* <p className="text-xs font-medium ">Update Cover Image</p> */}
                     </div>
                   </>
                 ) : (
@@ -252,7 +255,7 @@ const UpdateProfile = () => {
                 {logoUrl ? (
                   <img
                     src={logoUrl}
-                    className="w-full h-full object-contain rounded-full"
+                    className="w-full h-full object-scale-down rounded-full"
                   />
                 ) : (
                   <img
@@ -280,8 +283,13 @@ const UpdateProfile = () => {
                 }}
               />
               {!errors?.profilePicture && !errors?.cover && (
-                <div className="w-full h-[43px] border-x-[0.8px] flex justify-end  items-end  border-[#D9D9D9]  ">
-                  <span className="w-full h-[20px] bg-white blur-lg"></span>
+                <div className="w-full h-[43px] border-x-[0.8px] flex justify-end  items-center  border-[#D9D9D9]  ">
+                  <div className="w-full pl-28  cursor-pointer flex justify-start items-center gap-1">
+                    <img src={CameraIcon} alt="camera_icon" />
+                    <p className="text-xs font-medium ">
+                      Update Profile Picture
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
@@ -530,12 +538,12 @@ const UpdateProfile = () => {
                       handleChange(e);
                     }}
                     onBlur={handleBlur}
-                    className={`w-full h-full border-[0.8px] placeholder:text-xs bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
+                    className={`w-full h-full border-[0.8px]  bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
                       errors?.apartment && touched?.apartment
                         ? "border-red-500"
                         : "border-[#D9D9D9]"
                     }`}
-                    placeholder="Apt. (Optional)"
+                    placeholder="Apt#"
                   />
                 </div>
                 {errors.apartment && touched.apartment ? (

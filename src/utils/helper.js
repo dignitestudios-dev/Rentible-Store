@@ -97,6 +97,11 @@ export function convertToUTCTimestamp(dateString, dayTime = "start") {
   }
 
   // Convert to ISO string and return the timestamp
+
+  console.log(
+    date,
+    "sdfghjkl;lkjhgfdfghjklkjhgfdfghjkljhgfdfghjklkjhgfdsdfghjkjhg"
+  );
   return `${date}`;
 }
 

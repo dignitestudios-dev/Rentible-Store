@@ -112,6 +112,8 @@ const EditProduct = () => {
     values.pricePerHour = product?.pricePerHour;
     values.quantity = product?.quantity;
     setCover(coverIndex);
+    setUserInput(product?.pickupAddress);
+    values.pickupAddress = product?.pickupAddress;
 
     setPreviews(allImages);
     setPreviewsToSend(allImages);

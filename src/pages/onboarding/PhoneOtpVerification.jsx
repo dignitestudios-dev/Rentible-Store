@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ForgotKey, OTPVector, USFlag } from "../../assets/export";
 import { Link, useNavigate } from "react-router-dom";
 import { IoIosArrowRoundBack } from "react-icons/io";
@@ -8,10 +8,32 @@ import { FiLoader } from "react-icons/fi";
 import { useFormik } from "formik";
 import { verifyOtpValues } from "../../data/authentication";
 import { verifytOtpSchema } from "../../schema/verifyOtpSchema";
-
+import Cookies from "js-cookie";
+import UpdatePhoneNumberModal from "./UpdatePhoneNumberModal";
 const PhoneOtpVerification = () => {
   const [resendLoading, setResendLoading] = useState(false);
   const navigate = useNavigate();
+
+  const [timer, setTimer] = useState(null);
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  useEffect(() => {
+    let interval;
+
+    if (isDisabled && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    }
+
+    if (timer === 0) {
+      setIsDisabled(false);
+      setTimer(null);
+    }
+
+    return () => clearInterval(interval); // Cleanup on unmount or when timer changes
+  }, [isDisabled, timer]);
+
   const resendPhoneOtp = async () => {
     try {
       setResendLoading(true);
@@ -20,6 +42,8 @@ const PhoneOtpVerification = () => {
 
       if (response?.data?.success) {
         SuccessToast("OTP Resent successfully.");
+        setTimer(60);
+        setIsDisabled(true);
         setResendLoading(false);
       }
     } catch (error) {
@@ -59,6 +83,17 @@ const PhoneOtpVerification = () => {
       },
     });
 
+  // useEffect(() => {
+  //   window.addEventListener("beforeunload", function (e) {
+  //     e.preventDefault();
+  //     e.returnValue = "";
+  //     Cookies.remove("token");
+  //     navigate("/signup");
+  //   });
+  // }, []);
+
+  const [openEdit, setOpenEdit] = useState(false);
+
   return (
     <form
       onSubmit={(e) => {
@@ -75,6 +110,18 @@ const PhoneOtpVerification = () => {
           <p className="text-[18px] font-normal text-center leading-[27px] text-[#3C3C43D9]">
             The code was sent to <br />
             <span className="text-black">+{localStorage.getItem("phone")}</span>
+            <button
+              type="button"
+              onClick={() => setOpenEdit(true)}
+              className="text-orange-500 text-xs ml-1 font-bold underline underline-offset-2"
+            >
+              Change
+            </button>
+            <UpdatePhoneNumberModal
+              isOpen={openEdit}
+              onRequestClose={() => setOpenEdit(false)}
+            />
+            {/* /store */}
           </p>
           {/* <p className="text-[18px] font-normal text-center leading-[27px] mt-2 text-black">
             00:00
@@ -100,16 +147,21 @@ const PhoneOtpVerification = () => {
                 }`}
                 placeholder="XXXXXX"
               />
-              <span
+              <button
+                type="button"
+                tabIndex={0}
+                disabled={resendLoading || loading || isDisabled}
                 onClick={resendPhoneOtp}
                 className="absolute w-16 cursor-pointer h-[40px] rounded-[7px] top-1 right-1 bg-[#565656] text-white flex items-center justify-center text-sm font-medium"
               >
                 {resendLoading ? (
                   <FiLoader className="animate-spin text-lg " />
+                ) : timer ? (
+                  `00:${timer}`
                 ) : (
                   "Resend"
                 )}
-              </span>
+              </button>
             </div>
 
             {errors.otp && touched.otp ? (
@@ -126,13 +178,6 @@ const PhoneOtpVerification = () => {
           </button>
         </div>
       </div>
-      <Link
-        to={-1}
-        className="text-sm font-medium text-white hover:no-underline hover:text-white flex items-center justify-center"
-      >
-        <IoIosArrowRoundBack className="text-[28px]" />
-        <span>Back</span>
-      </Link>
     </form>
   );
 };

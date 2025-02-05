@@ -60,13 +60,14 @@ const ChangePassword = () => {
       },
     });
 
-  useEffect(() => {
-    window.addEventListener("beforeunload", function (e) {
-      e.preventDefault();
-      e.returnValue = "";
-      Cookies.remove("token");
-    });
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener("beforeunload", function (e) {
+  //     e.preventDefault();
+  //     e.returnValue = "";
+  //     Cookies.remove("token");
+  //     navigate("/login");
+  //   });
+  // }, []);
   return (
     <form
       onSubmit={handleSubmit}
@@ -163,7 +164,7 @@ const ChangePassword = () => {
           </button>
         </div>
       </div>
-      <button
+      {/* <button
         onClick={() => {
           Cookies.remove("token");
           navigate(-1);
@@ -172,7 +173,7 @@ const ChangePassword = () => {
       >
         <IoIosArrowRoundBack className="text-[28px]" />
         <span>Back</span>
-      </button>
+      </button> */}
     </form>
   );
 };

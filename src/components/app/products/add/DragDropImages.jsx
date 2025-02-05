@@ -101,7 +101,9 @@ const DragDropImages = ({
         }}
         onDragLeave={() => setIsDragging(false)}
         className={`w-full ${
-          files?.length > 0 ? "h-auto" : "h-[343px] p-4  bg-gray-50 border-2"
+          files?.length > 0
+            ? "h-auto"
+            : "h-[343px] p-4  bg-gray-50 border-2 border-dashed"
         } rounded-[18px] flex flex-col gap-2 justify-center items-center  transition-all 
           ${
             isDragging

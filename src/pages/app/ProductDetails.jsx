@@ -7,7 +7,10 @@ import { MdKeyboardBackspace } from "react-icons/md";
 import { FiLoader } from "react-icons/fi";
 import { Swiper } from "swiper/react";
 import { SwiperSlide } from "swiper/react";
-import { convertEpochTo12HourFormat } from "../../utils/helper";
+import {
+  convertEpochTo12HourFormat,
+  formatPhoneNumberInput,
+} from "../../utils/helper";
 import DeleteProductConfirm from "../../components/app/products/DeleteProductConfirm";
 import ProductReviews from "../../components/app/products/ProductReviews";
 
@@ -372,7 +375,7 @@ const ProductDetails = () => {
                 Phone Number
               </span>
               <span className="text-[12px] font-normal text-[#818181] leading-[18px]">
-                {product?.store?.phone || "N/A"}
+                {formatPhoneNumberInput(product?.store?.phone) || "N/A"}
               </span>
             </div>
           </div>

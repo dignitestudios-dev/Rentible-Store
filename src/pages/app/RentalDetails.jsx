@@ -12,8 +12,10 @@ import {
   convertEpochToMMDDYYYY,
   formatDateToMMDDYYYY,
   formatEpochToMMDDYYYY,
+  formatPhoneNumberInput,
   getDetailedStatusClasses,
   getStatusClasses,
+  isTimeRemaining,
 } from "../../utils/helper";
 import DeleteProductConfirm from "../../components/app/products/DeleteProductConfirm";
 import { AppContext } from "../../context/AppContext";
@@ -31,6 +33,8 @@ import AdjustBookingPopup from "../../components/app/rental_tracking/AdjustBooki
 import ReviewReportConfirm from "../../components/app/rental_tracking/ReviewReportConfirm";
 import ReviewReportReasons from "../../components/app/rental_tracking/ReviewReportReasons";
 import ReviewReported from "../../components/app/rental_tracking/ReviewReported";
+import NotReadyModal from "../../components/app/rental_tracking/NotReadyModal";
+import ContractModal from "../../components/app/rental_tracking/ContractModal";
 
 const RentalDetails = () => {
   const navigate = useNavigate();
@@ -205,6 +209,9 @@ const RentalDetails = () => {
     }
   };
 
+  const [notReady, setNotReady] = useState(false);
+  const [openContract, setOpenContract] = useState(false);
+
   return loading ? (
     <div className="w-full h-full  flex flex-col gap-6  py-4 px-2 lg:px-6 justify-start items-start ">
       <div className="w-full h-auto flex flex-col gap-3 justify-start items-start">
@@ -338,15 +345,23 @@ const RentalDetails = () => {
               )}
 
               {rental?.status === "pending" ? (
-                <button
-                  type="button"
-                  onClick={() => setOpenQrDeliver(true)}
-                  className="w-[150px] h-[49px] rounded-[8px] bg-[#F85E00] text-white flex gap-2 items-center justify-center"
-                >
-                  <span className="text-[14px] font-normal leading-[21px]">
-                    Mark As Delivered
-                  </span>
-                </button>
+                <div className="w-auto flex flex-col justify-start items-start gap-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      isTimeRemaining(rental?.pickupTime)
+                        ? setNotReady(true)
+                        : !rental?.isContractSigned
+                        ? setOpenContract(true)
+                        : setOpenQrDeliver(true);
+                    }}
+                    className="w-[150px] h-[49px] rounded-[8px] bg-[#F85E00] disabled:bg-[#464646] text-white flex gap-2 items-center justify-center"
+                  >
+                    <span className="text-[14px] font-normal leading-[21px]">
+                      Mark As Delivered
+                    </span>
+                  </button>
+                </div>
               ) : (
                 rental?.status === "in-progress" && (
                   <button
@@ -364,6 +379,16 @@ const RentalDetails = () => {
           )}
         </div>
       </div>
+
+      <NotReadyModal
+        isOpen={notReady}
+        onRequestClose={() => setNotReady(false)}
+      />
+
+      <ContractModal
+        isOpen={openContract}
+        onRequestClose={() => setOpenContract(false)}
+      />
 
       <AdjustBookingPopup
         isOpen={isPopupShown}
@@ -498,9 +523,15 @@ const RentalDetails = () => {
                   </span>
                 </span>
 
-                {!["completed", "cancelled", "incomplete", "rejected"].includes(
-                  rental?.status
-                ) && <Timer dropOffEpoch={rental?.dropOffTime} />}
+                {![
+                  "completed",
+                  "cancelled",
+                  "incomplete",
+                  "rejected",
+                  "pending",
+                ].includes(rental?.status) && (
+                  <Timer dropOffEpoch={rental?.dropOffTime} />
+                )}
               </div>
             </div>
 
@@ -545,7 +576,7 @@ const RentalDetails = () => {
                   Phone Number
                 </span>
                 <span className="text-[12px] font-normal text-[#818181] leading-[18px]">
-                  {rental?.store?.phone || "N/A"}
+                  {formatPhoneNumberInput(rental?.store?.phone) || "N/A"}
                 </span>
               </div>
             </div>
@@ -568,7 +599,7 @@ const RentalDetails = () => {
                   Order Created
                 </span>
                 <span className="text-[12px] font-normal text-[#818181] leading-[18px]">
-                  {formatEpochToMMDDYYYY(rental?.bookingDate) || "N/A"}
+                  {formatDateToMMDDYYYY(rental?.createdAt) || "N/A"}
                 </span>
               </div>
               {/* <div className="w-[3%] h-14 flex items-center justify-start">

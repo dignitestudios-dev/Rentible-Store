@@ -807,9 +807,7 @@ const Messages = () => {
                         {isValidUrl(chatUser?.lastMessage) ? (
                           <div className="w-auto flex items-center  justify-start gap-2">
                             <FaFileImage className="text-sm" />
-                            <span className="text-xs">
-                              {getFileNameFromUrl(chatUser?.lastMessage)}
-                            </span>
+                            <span className="text-xs">{"Image File"}</span>
                           </div>
                         ) : chatUser?.lastMessage?.length > 35 ? (
                           chatUser?.lastMessage?.slice(0, 35) + "..."
