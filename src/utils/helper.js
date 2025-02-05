@@ -88,16 +88,14 @@ export function convertToUTCTimestamp(dateString, dayTime = "start") {
   let date = new Date(dateString);
   // console.log(date);
 
-  // if (isNaN(date)) return "Invalid Date";
+  if (isNaN(date)) return "Invalid Date";
 
   // // Set the time to midnight UTC
-  // if (dayTime == "end") {
-  //   date.setUTCHours(23, 59, 59, 999);
-  // } else {
-  //   date.setUTCHours(0, 0, 0, 0);
-  // }
-
-  console.log(date);
+  if (dayTime == "end") {
+    date.setUTCHours(23, 59, 59, 999);
+  } else {
+    date.setUTCHours(0, 0, 0, 0);
+  }
 
   // Convert to ISO string and return the timestamp
   return `${date}`;
@@ -147,4 +145,31 @@ export function getDetailedStatusClasses(status) {
 
   // Return the class based on the status or a default class if status is unrecognized
   return statusClasses[status] || "bg-gray-500/10 text-gray-500";
+}
+
+export const formatPhoneNumberInput = (input) => {
+  // Remove all non-numeric characters
+  const cleaned = input.replace(/\D/g, "");
+
+  // Remove leading '1' if it exists (US country code)
+  const withoutCountryCode = cleaned.startsWith("1")
+    ? cleaned.slice(1)
+    : cleaned;
+
+  if (withoutCountryCode.length > 3 && withoutCountryCode.length <= 6) {
+    return `(${withoutCountryCode.slice(0, 3)}) ${withoutCountryCode.slice(3)}`;
+  } else if (withoutCountryCode.length > 6) {
+    return `(${withoutCountryCode.slice(0, 3)}) ${withoutCountryCode.slice(
+      3,
+      6
+    )}-${withoutCountryCode.slice(6, 10)}`;
+  } else if (withoutCountryCode.length > 0) {
+    return `(${withoutCountryCode}`;
+  }
+  return withoutCountryCode;
+};
+
+export function isTimeRemaining(epochTime) {
+  const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds (epoch format)
+  return epochTime > currentTime; // Return true if epochTime is in the future, else false
 }
