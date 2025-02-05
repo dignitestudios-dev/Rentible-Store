@@ -86,15 +86,14 @@ export function convertToUTCTimestamp(dateString, dayTime = "start") {
   // if (!year || !month || !day) return "Invalid Date";
 
   let date = new Date(dateString);
-  // console.log(date);
 
   if (isNaN(date)) return "Invalid Date";
 
   // // Set the time to midnight UTC
   if (dayTime == "end") {
-    date.setUTCHours(23, 59, 59, 999);
+    date.setHours(23, 59, 59, 999);
   } else {
-    date.setUTCHours(0, 0, 0, 0);
+    date.setHours(0, 0, 0, 0);
   }
 
   // Convert to ISO string and return the timestamp
