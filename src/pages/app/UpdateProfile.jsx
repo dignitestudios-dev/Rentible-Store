@@ -26,7 +26,6 @@ import { Autocomplete, useLoadScript } from "@react-google-maps/api";
 const UpdateProfile = () => {
   const location = useLocation();
   const profile = location.state;
-  console.log(profile);
   const {
     userInput,
     setUserInput,
