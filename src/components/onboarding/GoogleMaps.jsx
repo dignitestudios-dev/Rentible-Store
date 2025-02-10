@@ -124,27 +124,31 @@ function GoogleMaps({ state, setAddress, address }) {
     );
   }
 
-  return (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={25}
-      onClick={(e) => handleMapClick(e)}
-    >
-      {/* Render a marker for the user */}
-      <Marker
-        key={`${latitude}-${longitude}`}
-        position={{
-          lat: latitude,
-          lng: longitude,
-        }}
-        icon={{
-          url: "/map_marker.png", // Path to your custom marker
-          scaledSize: new google.maps.Size(50, 50),
-        }}
-      ></Marker>
-    </GoogleMap>
-  );
+  try {
+    return (
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={25}
+        onClick={(e) => handleMapClick(e)}
+      >
+        {/* Render a marker for the user */}
+        <Marker
+          key={`${latitude}-${longitude}`}
+          position={{
+            lat: latitude,
+            lng: longitude,
+          }}
+          icon={{
+            url: "/map_marker.png", // Path to your custom marker
+            scaledSize: new google.maps.Size(50, 50),
+          }}
+        ></Marker>
+      </GoogleMap>
+    );
+  } catch (error) {
+    console.log(error, "cghjkjhkjhkjh");
+  }
 }
 
 export default GoogleMaps;
