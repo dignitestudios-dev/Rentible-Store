@@ -11,12 +11,10 @@ import axios from "../../axios";
 import { ErrorToast } from "../global/Toaster";
 
 const Navbar = () => {
-  const { notifications, setSidebarOpen } = useContext(AppContext);
+  const { notifications, setSidebarOpen, unreadCount } = useContext(AppContext);
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const unreadCount = notifications.filter(
-    (notification) => !notification.isRead
-  ).length;
+
   const store = Cookies.get("store") ? JSON.parse(Cookies.get("store")) : null;
   const location = useLocation();
 

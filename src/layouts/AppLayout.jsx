@@ -11,7 +11,8 @@ import { auth } from "../firebase/firebase";
 const AppLayout = ({ page }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { fetchToken, setNotifications } = useContext(AppContext);
+  const { fetchToken, setNotifications, notifications, setUnreadCount } =
+    useContext(AppContext);
 
   const getNotifications = () => {
     const token = Cookies.get("token");
@@ -39,6 +40,12 @@ const AppLayout = ({ page }) => {
     getNotifications();
     fetchToken();
   }, []);
+
+  useEffect(() => {
+    setUnreadCount(
+      notifications.filter((notification) => !notification.isRead).length
+    );
+  }, [notifications]);
   return (
     <div className="w-screen h-screen flex flex-col justify-start items-start">
       <Navbar />

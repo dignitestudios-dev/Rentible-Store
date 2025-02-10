@@ -18,6 +18,7 @@ export const AppContextProvider = ({ children }) => {
   const [show, setShow] = useState(false);
   const [notification, setNotification] = useState({ title: "", body: "" });
   const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const [isTokenFound, setTokenFound] = useState(false);
 
@@ -91,6 +92,8 @@ export const AppContextProvider = ({ children }) => {
         setSidebarOpen,
         latLng,
         setLatLng,
+        unreadCount,
+        setUnreadCount,
       }}
     >
       {children}

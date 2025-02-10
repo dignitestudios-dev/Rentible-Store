@@ -356,7 +356,7 @@ const EditProduct = () => {
               placeholder={"ABCD, 12345, Street 2, Florida, USA"}
             />
             <div className="w-full h-[175px] rounded-[16px]">
-              <GoogleMaps />
+              <GoogleMaps address={userInput} setAddress={setUserInput} />
             </div>
           </div>
         </div>
