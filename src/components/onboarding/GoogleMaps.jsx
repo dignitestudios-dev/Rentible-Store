@@ -88,16 +88,11 @@ function GoogleMaps({ state, setAddress, address }) {
     // Perform geocoding for the entered address
     axios
       .get(
-        userInput !== ""
-          ? `https://maps.googleapis.com/maps/api/geocode/json?address=${userInput}&key=${
-              import.meta.env.VITE_APP_GMAPS_KEY
-            }`
-          : `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${
-              import.meta.env.VITE_APP_GMAPS_KEY
-            }`
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${userInput}&key=${
+          import.meta.env.VITE_APP_GMAPS_KEY
+        }`
       )
       .then((response) => {
-        console.log(response);
         const { lat, lng } = response.data.results[0].geometry.location;
         setLatitude(lat ? lat : 0);
         setLongitude(lng ? lng : 0);
@@ -118,7 +113,7 @@ function GoogleMaps({ state, setAddress, address }) {
   };
 
   useEffect(() => {
-    // userInput !== "" && handleSetAddress();
+    userInput !== "" && handleSetAddress();
   }, [userInput]);
 
   if (!isLoaded) {
@@ -145,7 +140,7 @@ function GoogleMaps({ state, setAddress, address }) {
         }}
         icon={{
           url: "/map_marker.png", // Path to your custom marker
-          // scaledSize: new google.maps.Size(50, 50),
+          scaledSize: new google.maps.Size(50, 50),
         }}
       ></Marker>
     </GoogleMap>
