@@ -13,7 +13,6 @@ function GoogleMaps({ state, setAddress, address }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: `${import.meta.env.VITE_APP_GMAPS_KEY}`,
   });
-
   const {
     setLatitude,
     setLongitude,
@@ -48,14 +47,11 @@ function GoogleMaps({ state, setAddress, address }) {
   };
 
   const handleMapClick = (e) => {
-    if (!isLoaded) return; // Ensure Google Maps is loaded
-
     const { latLng } = e;
     const latitude = latLng.lat();
     const longitude = latLng.lng();
-
-    setLatitude(latitude);
-    setLongitude(longitude);
+    setLatitude(latitude ? latitude : 0);
+    setLongitude(longitude ? longitude : 0);
 
     // Perform reverse geocoding
     axios
@@ -65,13 +61,20 @@ function GoogleMaps({ state, setAddress, address }) {
         }`
       )
       .then((response) => {
-        const formattedAddress = response.data.results[0]?.formatted_address;
-        setUserInput(formattedAddress);
-        setSelectedLocation({ latitude, longitude, address: formattedAddress });
-        setAddress(formattedAddress);
+        const address = response.data.results[1].formatted_address;
+        setUserInput(address);
+        setSelectedLocation({ latitude, longitude, address });
+        try {
+          setLatitude(latitude);
+          setLongitude(longitude);
+          setAddress(address);
+        } catch (error) {}
       })
       .catch((error) => {
         console.log("Error fetching address:", error);
+        setLatitude(0);
+        setLongitude(0);
+        setUserInput("");
         setSelectedLocation({
           latitude,
           longitude,
@@ -81,28 +84,32 @@ function GoogleMaps({ state, setAddress, address }) {
   };
 
   const handleSetAddress = () => {
-    if (!isLoaded) return; // Ensure Google Maps is loaded
-
+    // Perform geocoding for the entered address
     axios
       .get(
         userInput !== ""
-          ? `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-              userInput
-            )}&key=${import.meta.env.VITE_APP_GMAPS_KEY}`
-          : `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-              address
-            )}&key=${import.meta.env.VITE_APP_GMAPS_KEY}`
+          ? `https://maps.googleapis.com/maps/api/geocode/json?address=${userInput}&key=${
+              import.meta.env.VITE_APP_GMAPS_KEY
+            }`
+          : `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${
+              import.meta.env.VITE_APP_GMAPS_KEY
+            }`
       )
       .then((response) => {
+        console.log(response);
         const { lat, lng } = response.data.results[0].geometry.location;
-        setLatitude(lat);
-        setLongitude(lng);
+        setLatitude(lat ? lat : 0);
+        setLongitude(lng ? lng : 0);
         setSelectedLocation({
           latitude: lat,
           longitude: lng,
           address: userInput,
         });
-        setAddress(response.data.results[0]?.formatted_address || "");
+        setAddress(
+          response?.data?.results[0]
+            ? response?.data?.results[0]?.formatted_address
+            : ""
+        );
       })
       .catch((error) => {
         console.log("Error fetching location", error);
@@ -110,26 +117,16 @@ function GoogleMaps({ state, setAddress, address }) {
   };
 
   useEffect(() => {
-    if (userInput !== "") {
-      handleSetAddress();
-    }
+    userInput !== "" && handleSetAddress();
   }, [userInput, address]);
-
-  if (!isLoaded) {
-    return (
-      <div className="w-full h-full bg-gray-200 rounded-xl text-xs font-medium text-gray-600 flex items-center justify-center">
-        Loading map...
-      </div>
-    );
-  }
 
   return (
     <>
-      {state !== "" ? (
+      {isLoaded && state !== "" ? (
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
-          zoom={15}
+          zoom={25}
           onClick={(e) => handleMapClick(e)}
         >
           {/* Render a marker for the user */}
@@ -149,7 +146,7 @@ function GoogleMaps({ state, setAddress, address }) {
                     url: "/map_marker.png", // Path to your custom marker
                   }
             }
-          />
+          ></Marker>
         </GoogleMap>
       ) : (
         <div className="w-full h-full bg-gray-200 rounded-xl text-xs font-medium text-gray-600 flex items-center justify-center">
