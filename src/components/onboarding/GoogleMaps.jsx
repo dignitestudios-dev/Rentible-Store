@@ -93,19 +93,25 @@ function GoogleMaps({ state, setAddress, address }) {
         }`
       )
       .then((response) => {
-        const { lat, lng } = response.data.results[0].geometry.location;
-        setLatitude(lat ? lat : 0);
-        setLongitude(lng ? lng : 0);
-        setSelectedLocation({
-          latitude: lat,
-          longitude: lng,
-          address: userInput,
-        });
-        setAddress(
-          response?.data?.results[0]
-            ? response?.data?.results[0]?.formatted_address
-            : ""
-        );
+        if (response.data.results[0].geometry) {
+          const { lat, lng } = response.data.results[0].geometry.location;
+          setLatitude(lat ? lat : 0);
+          setLongitude(lng ? lng : 0);
+          setSelectedLocation({
+            latitude: lat,
+            longitude: lng,
+            address: userInput,
+          });
+          setAddress(
+            response?.data?.results[0]
+              ? response?.data?.results[0]?.formatted_address
+              : ""
+          );
+        } else {
+          setLatitude(0);
+          setLongitude(0);
+          setAddress("");
+        }
       })
       .catch((error) => {
         console.log("Error fetching location", error);
