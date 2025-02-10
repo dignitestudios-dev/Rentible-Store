@@ -16,6 +16,7 @@ import { useFormik } from "formik";
 import { addProductValues } from "../../data/addProduct";
 import { addProductSchema } from "../../schema/addProductSchema";
 import { FiLoader } from "react-icons/fi";
+import MapProductInput from "../../components/app/products/add/MapProductInput";
 
 const AddProduct = () => {
   const navigate = useNavigate();
@@ -92,6 +93,11 @@ const AddProduct = () => {
       validateOnChange: true,
       validateOnBlur: true,
       onSubmit: async (values, action) => {
+        console.log(latitude, longitude);
+        if ((latitude == 0 || longitude == 0) && userInput !== "") {
+          errors.pickupAddress =
+            "Please select a valid pickup address from dropdown.";
+        }
         try {
           setLoading(true);
 
@@ -276,7 +282,7 @@ const AddProduct = () => {
                 </button>
               </div>
             </div>
-            <ProductInput
+            <MapProductInput
               type={"text"}
               id={"pickupAddress"}
               name={"pickupAddress"}
@@ -285,14 +291,21 @@ const AddProduct = () => {
                 setUserInput(e.target.value);
                 handleChange(e);
               }}
+              setUserInput={setUserInput}
+              setLatitude={setLatitude}
+              setLongitude={setLongitude}
+              latitude={latitude}
+              longitude={longitude}
+              userInput={userInput}
               onBlur={handleBlur}
+              values={values}
               errors={errors}
               touched={touched}
               label={"Same as profile"}
               placeholder={"ABCD, 12345, Street 2, Florida, USA"}
             />
             <div className="w-full h-[175px] rounded-[16px]">
-              <GoogleMaps />
+              <GoogleMaps setAddress={setUserInput} />
             </div>
           </div>
         </div>

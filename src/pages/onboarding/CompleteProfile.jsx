@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   BigCameraIcon,
   CameraIcon,
@@ -18,6 +18,7 @@ import { FiLoader } from "react-icons/fi";
 import GoogleMaps from "../../components/onboarding/GoogleMaps";
 import { AppContext } from "../../context/AppContext";
 import Cookies from "js-cookie";
+import { Autocomplete, useLoadScript } from "@react-google-maps/api";
 
 const CompleteProfile = () => {
   const {
@@ -168,6 +169,26 @@ const CompleteProfile = () => {
       navigate("/signup");
     });
   }, []);
+
+  const startLocationRef = useRef();
+
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: import.meta.env.VITE_APP_GMAPS_KEY,
+    libraries: ["places"],
+  });
+
+  const handlePlaceChange = () => {
+    const place = startLocationRef.current.getPlace();
+    if (place.geometry) {
+      const lat = place.geometry.location.lat();
+      const lng = place.geometry.location.lng();
+      //   onChange();
+      setLatitude(lat);
+      setLongitude(lng);
+      setUserInput(place?.formatted_address);
+      values.address = place?.formatted_address;
+    }
+  };
   return (
     <form
       onSubmit={handleSubmit}
@@ -394,23 +415,35 @@ const CompleteProfile = () => {
           <div className="w-full grid grid-cols-3 gap-2 justify-start items-start">
             <div className="w-full col-span-2 h-auto flex flex-col justify-start items-start gap-1">
               <div className="h-[49px] flex justify-start bg-[#F8F8F899] items-start w-full relative rounded-[8px]">
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  value={values.address}
-                  onChange={(e) => {
-                    handleChange(e);
-                    setUserInput(e.target.value);
-                  }}
-                  onBlur={handleBlur}
-                  className={`w-full h-full border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
-                    errors?.address && touched?.address
-                      ? "border-red-500"
-                      : "border-[#D9D9D9]"
-                  }`}
-                  placeholder="Street Address"
-                />
+                {!isLoaded ? (
+                  <div className="w-full h-[49px] bg-gray-300 rounded"></div>
+                ) : (
+                  <Autocomplete
+                    className="w-full h-full"
+                    onLoad={(autocomplete) =>
+                      (startLocationRef.current = autocomplete)
+                    }
+                    onPlaceChanged={handlePlaceChange}
+                  >
+                    <input
+                      type="text"
+                      id="address"
+                      name="address"
+                      value={values.address}
+                      onChange={(e) => {
+                        handleChange(e);
+                        setUserInput(e.target.value);
+                      }}
+                      onBlur={handleBlur}
+                      className={`w-full h-full border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
+                        errors?.address && touched?.address
+                          ? "border-red-500"
+                          : "border-[#D9D9D9]"
+                      }`}
+                      placeholder="Street Address"
+                    />
+                  </Autocomplete>
+                )}
               </div>
               {errors.address && touched.address ? (
                 <p className="text-red-700 text-xs font-medium">

@@ -102,17 +102,15 @@ const Products = () => {
         header: true,
         skipEmptyLines: true,
         complete: (results) => {
+          // console.log(results, "sdsfghjshghjhgfd");
           const parsedData = results.data.map((item, key) => ({
             _id: key,
             name: item.name || "",
             description: item.description || "",
             quantity: item.quantity || "",
-            categoryId: null,
-            subCategoryId: null,
-            availableDays:
-              item?.availableDays && Array.isArray(item?.availableDays)
-                ? item?.availableDays
-                : [],
+            categoryId: item?.categoryId || null,
+            subCategoryId: item?.subCategoryId || null,
+            availableDays: item?.availableDays ? item?.availableDays : [],
             pickupTime: item.pickupTime || "",
             dropOffTime: item.dropOffTime || "",
             cover: item?.cover || null,
@@ -122,6 +120,7 @@ const Products = () => {
             latitude: null,
             longitude: null,
           }));
+
           setCsvProducts(parsedData);
           setIsCSV(true);
         },

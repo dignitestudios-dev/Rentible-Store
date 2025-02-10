@@ -18,6 +18,7 @@ import { addProductSchema } from "../../schema/addProductSchema";
 import { FiLoader } from "react-icons/fi";
 import { convertEpochToTimeObject } from "../../utils/helper";
 import EditDragDropImage from "../../components/app/products/add/EditDragDropImage";
+import MapProductInput from "../../components/app/products/add/MapProductInput";
 
 const EditProduct = () => {
   const location = useLocation();
@@ -35,6 +36,8 @@ const EditProduct = () => {
   const [selectedPickupTime, setSelectedPickupTime] = useState(null);
   const [selectedDropOffTime, setSelectedDropOffTime] = useState(null);
   const [selectedDays, setSelectedDays] = useState([]);
+
+  const store = Cookies.get("store") ? JSON.parse(Cookies.get("store")) : null;
 
   const [categories, setCategories] = useState([]); // Updated variable name to camelCase
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -125,7 +128,7 @@ const EditProduct = () => {
     setSelectedSubCategory(product?.subCategory);
   }, [selectedCategory]);
 
-  const [isAddNew, setIsAddNew] = useState(false);
+  const [isAddNew, setIsAddNew] = useState(true);
 
   // const store = JSON.parse(Cookies.get("store"));
   const { id } = useParams();
@@ -194,11 +197,11 @@ const EditProduct = () => {
 
   useEffect(() => {
     if (isAddNew) {
-      setUserInput("");
-      values.pickupAddress = "";
-    } else {
       setUserInput(product?.pickupAddress);
       values.pickupAddress = product?.pickupAddress;
+    } else {
+      setUserInput(store?.address);
+      values.pickupAddress = store?.address;
     }
   }, [isAddNew]);
 
@@ -326,11 +329,11 @@ const EditProduct = () => {
                     isAddNew ? "bg-orange-500 text-white" : "text-[#505050]"
                   } `}
                 >
-                  + Add New
+                  + Previously Added
                 </button>
               </div>
             </div>
-            <ProductInput
+            <MapProductInput
               type={"text"}
               id={"pickupAddress"}
               name={"pickupAddress"}
@@ -339,7 +342,14 @@ const EditProduct = () => {
                 setUserInput(e.target.value);
                 handleChange(e);
               }}
+              setUserInput={setUserInput}
+              setLatitude={setLatitude}
+              setLongitude={setLongitude}
+              latitude={latitude}
+              longitude={longitude}
+              userInput={userInput}
               onBlur={handleBlur}
+              values={values}
               errors={errors}
               touched={touched}
               label={"Same as profile"}

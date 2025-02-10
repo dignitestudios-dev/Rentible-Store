@@ -9,7 +9,7 @@ import axios from "axios";
 import { AppContext } from "../../context/AppContext";
 import { ErrorToast } from "../global/Toaster";
 
-function GoogleMaps({ state, address, setLatLng, setAddress }) {
+function GoogleMaps({ state, setAddress, address }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: `${import.meta.env.VITE_APP_GMAPS_KEY}`,
   });
@@ -65,7 +65,8 @@ function GoogleMaps({ state, address, setLatLng, setAddress }) {
         setUserInput(address);
         setSelectedLocation({ latitude, longitude, address });
         try {
-          setLatLng({ latitude, longitude });
+          setLatitude(latitude);
+          setLongitude(longitude);
           setAddress(address);
         } catch (error) {}
       })
@@ -92,6 +93,7 @@ function GoogleMaps({ state, address, setLatLng, setAddress }) {
             }`
       )
       .then((response) => {
+        console.log(response);
         const { lat, lng } = response.data.results[0].geometry.location;
         setLatitude(lat ? lat : 0);
         setLongitude(lng ? lng : 0);
@@ -100,11 +102,11 @@ function GoogleMaps({ state, address, setLatLng, setAddress }) {
           longitude: lng,
           address: userInput,
         });
-
-        try {
-          setLatLng({ lat, lng });
-          setAddress(address);
-        } catch (error) {}
+        setAddress(
+          response?.data?.results[0]
+            ? response?.data?.results[0]?.formatted_address
+            : ""
+        );
       })
       .catch((error) => {
         console.log("Error fetching location", error);
@@ -112,7 +114,7 @@ function GoogleMaps({ state, address, setLatLng, setAddress }) {
   };
 
   useEffect(() => {
-    (userInput !== "" || address !== "") && handleSetAddress();
+    userInput !== "" && handleSetAddress();
   }, [userInput, address]);
 
   return (

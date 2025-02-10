@@ -43,6 +43,8 @@ const CSVImport = ({ setIsCSV, products, setProducts, setUpdate }) => {
   };
 
   useEffect(() => {
+    
+
     getCategories();
   }, []);
 
@@ -94,11 +96,7 @@ const CSVImport = ({ setIsCSV, products, setProducts, setUpdate }) => {
   const [multipleLoading, setMultipleLoading] = useState(false);
 
   const handleRemoveBeforeIndex = (index) => {
-    console.log("index", index);
-    console.log(products);
     const filteredData = products?.filter((item, idx) => idx >= index);
-
-    console.log(filteredData);
 
     // Use a fresh array to update the state
     setProducts([...filteredData]);
@@ -202,7 +200,6 @@ const CSVImport = ({ setIsCSV, products, setProducts, setUpdate }) => {
 
       <div className="w-full flex flex-col gap-6  justify-start items-start">
         {products?.map((product, key) => {
-          console.log(product);
           return (
             <CsvProductContainer
               key={product?._id || key} // Use a unique identifier like `id`

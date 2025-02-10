@@ -15,10 +15,14 @@ const Settings = () => {
 
   const [changePassOpen, setChangePassOpen] = useState(false);
   const [notification, setNotification] = useState(false);
+  const [contract, setContract] = useState(null);
 
   const getSettings = async () => {
     const { data } = await axios.get("/settings");
+    const response = await axios.get("/global/contract");
+
     setNotification(data?.data?.notification);
+    setContract(response?.data?.data);
   };
   useEffect(() => {
     getSettings();
@@ -32,6 +36,14 @@ const Settings = () => {
       fetchToken();
     }
   };
+
+  function redirectToLink(url) {
+    if (url) {
+      window.open(url, "_blank"); // Opens the link in a new tab or window
+    } else {
+      console.error("Invalid URL provided");
+    }
+  }
 
   const [openBank, setOpenBank] = useState(false);
 
@@ -144,7 +156,12 @@ const Settings = () => {
             </span>
           </div>
 
-          <button className="w-[162px] h-[51px] flex items-center justify-center rounded-[6px] text-[#7D7C7D] bg-[#F4F4F4] leading-[24px] font-normal text-[16px]">
+          <button
+            onClick={() => {
+              redirectToLink(contract);
+            }}
+            className="w-[162px] h-[51px] flex items-center justify-center rounded-[6px] text-[#7D7C7D] bg-[#F4F4F4] leading-[24px] font-normal text-[16px]"
+          >
             View Contract
           </button>
         </div>

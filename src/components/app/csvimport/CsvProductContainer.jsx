@@ -82,6 +82,11 @@ const CsvProductContainer = ({
     setName(product?.name);
     setDescription(product?.description);
     setQuantity(product?.quantity);
+
+    console.log(product?.categoryId, product, "sdfsdfsdf");
+
+    setSelectedCategory(product?.categoryId);
+    // setSelectedSubCategory(product?.subCategoryId);
     setSelectedDays(
       typeof product?.availableDays === "string"
         ? product?.availableDays?.split(",")
@@ -116,7 +121,7 @@ const CsvProductContainer = ({
 
           const timeDifference = dropOffHour24 - pickupHour24;
 
-          if (timeDifference === 4) {
+          if (timeDifference >= 4) {
             setSelectedDropOffTime(`${hour}:00 ${period}`);
           } else {
             console.log("Drop-off time is not 4 hours ahead of pickup time");
@@ -261,6 +266,7 @@ const CsvProductContainer = ({
                     Pickup Address
                   </h1>
                 </div>
+
                 <CsvProductInput
                   type={"text"}
                   id={"pickupAddress"}
@@ -274,7 +280,7 @@ const CsvProductContainer = ({
                   error={error}
                 />
                 <div className="w-full h-[175px] rounded-[16px]">
-                  <GoogleMaps address={address} setLatLng={setLatLng} />
+                  <GoogleMaps address={address} setAddress={setUserInput} />
                 </div>
               </div>
             </div>

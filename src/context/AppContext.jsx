@@ -68,6 +68,7 @@ export const AppContextProvider = ({ children }) => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const [latLng, setLatLng] = useState(null);
   return (
     <AppContext.Provider
       value={{
@@ -88,6 +89,8 @@ export const AppContextProvider = ({ children }) => {
         notifications,
         sidebarOpen,
         setSidebarOpen,
+        latLng,
+        setLatLng,
       }}
     >
       {children}
