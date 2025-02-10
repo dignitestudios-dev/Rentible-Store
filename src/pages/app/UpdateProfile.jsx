@@ -588,7 +588,11 @@ const UpdateProfile = () => {
             </div>
 
             <div className="w-full h-48 flex flex-col gap-1 justify-start items-start">
-              <GoogleMaps state={values.state} />
+              <GoogleMaps
+                state={values.state}
+                address={userInput}
+                setAddress={setUserInput}
+              />
             </div>
           </div>
         </div>

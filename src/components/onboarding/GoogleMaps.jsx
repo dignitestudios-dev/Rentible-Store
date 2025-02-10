@@ -118,7 +118,7 @@ function GoogleMaps({ state, setAddress, address }) {
   };
 
   useEffect(() => {
-    userInput !== "" && handleSetAddress();
+    // userInput !== "" && handleSetAddress();
   }, [userInput]);
 
   if (!isLoaded) {
@@ -145,6 +145,7 @@ function GoogleMaps({ state, setAddress, address }) {
         }}
         icon={{
           url: "/map_marker.png", // Path to your custom marker
+          scaledSize: new google.maps.Size(50, 50),
         }}
       ></Marker>
     </GoogleMap>
