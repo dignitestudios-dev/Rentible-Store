@@ -143,16 +143,9 @@ function GoogleMaps({ state, setAddress, address }) {
           lat: latitude,
           lng: longitude,
         }}
-        icon={
-          isLoaded
-            ? {
-                url: "/map_marker.png", // Path to your custom marker
-                scaledSize: new google.maps.Size(50, 50), // Adjust width and height as needed
-              }
-            : {
-                url: "/map_marker.png", // Path to your custom marker
-              }
-        }
+        icon={{
+          url: "/map_marker.png", // Path to your custom marker
+        }}
       ></Marker>
     </GoogleMap>
   );
