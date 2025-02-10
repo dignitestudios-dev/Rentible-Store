@@ -13,6 +13,7 @@ function GoogleMaps({ state, setAddress, address }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: `${import.meta.env.VITE_APP_GMAPS_KEY}`,
   });
+
   const {
     setLatitude,
     setLongitude,
@@ -47,11 +48,14 @@ function GoogleMaps({ state, setAddress, address }) {
   };
 
   const handleMapClick = (e) => {
+    if (!isLoaded) return; // Ensure Google Maps is loaded
+
     const { latLng } = e;
     const latitude = latLng.lat();
     const longitude = latLng.lng();
-    setLatitude(latitude ? latitude : 0);
-    setLongitude(longitude ? longitude : 0);
+
+    setLatitude(latitude);
+    setLongitude(longitude);
 
     // Perform reverse geocoding
     axios
@@ -61,14 +65,10 @@ function GoogleMaps({ state, setAddress, address }) {
         }`
       )
       .then((response) => {
-        const address = response.data.results[1].formatted_address;
-        setUserInput(address);
-        setSelectedLocation({ latitude, longitude, address });
-        try {
-          setLatitude(latitude);
-          setLongitude(longitude);
-          setAddress(address);
-        } catch (error) {}
+        const formattedAddress = response.data.results[0]?.formatted_address;
+        setUserInput(formattedAddress);
+        setSelectedLocation({ latitude, longitude, address: formattedAddress });
+        setAddress(formattedAddress);
       })
       .catch((error) => {
         console.log("Error fetching address:", error);
@@ -81,32 +81,28 @@ function GoogleMaps({ state, setAddress, address }) {
   };
 
   const handleSetAddress = () => {
-    // Perform geocoding for the entered address
+    if (!isLoaded) return; // Ensure Google Maps is loaded
+
     axios
       .get(
         userInput !== ""
-          ? `https://maps.googleapis.com/maps/api/geocode/json?address=${userInput}&key=${
-              import.meta.env.VITE_APP_GMAPS_KEY
-            }`
-          : `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${
-              import.meta.env.VITE_APP_GMAPS_KEY
-            }`
+          ? `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+              userInput
+            )}&key=${import.meta.env.VITE_APP_GMAPS_KEY}`
+          : `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+              address
+            )}&key=${import.meta.env.VITE_APP_GMAPS_KEY}`
       )
       .then((response) => {
-        console.log(response);
         const { lat, lng } = response.data.results[0].geometry.location;
-        setLatitude(lat ? lat : 0);
-        setLongitude(lng ? lng : 0);
+        setLatitude(lat);
+        setLongitude(lng);
         setSelectedLocation({
           latitude: lat,
           longitude: lng,
           address: userInput,
         });
-        setAddress(
-          response?.data?.results[0]
-            ? response?.data?.results[0]?.formatted_address
-            : ""
-        );
+        setAddress(response.data.results[0]?.formatted_address || "");
       })
       .catch((error) => {
         console.log("Error fetching location", error);
@@ -114,16 +110,26 @@ function GoogleMaps({ state, setAddress, address }) {
   };
 
   useEffect(() => {
-    userInput !== "" && handleSetAddress();
+    if (userInput !== "") {
+      handleSetAddress();
+    }
   }, [userInput, address]);
+
+  if (!isLoaded) {
+    return (
+      <div className="w-full h-full bg-gray-200 rounded-xl text-xs font-medium text-gray-600 flex items-center justify-center">
+        Loading map...
+      </div>
+    );
+  }
 
   return (
     <>
-      {isLoaded && state !== "" ? (
+      {state !== "" ? (
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
-          zoom={25}
+          zoom={15}
           onClick={(e) => handleMapClick(e)}
         >
           {/* Render a marker for the user */}
@@ -133,11 +139,17 @@ function GoogleMaps({ state, setAddress, address }) {
               lat: latitude,
               lng: longitude,
             }}
-            icon={{
-              url: "/map_marker.png", // Path to your custom marker
-              scaledSize: new google.maps.Size(50, 50), // Adjust width and height as needed
-            }}
-          ></Marker>
+            icon={
+              isLoaded
+                ? {
+                    url: "/map_marker.png", // Path to your custom marker
+                    scaledSize: new google.maps.Size(50, 50), // Adjust width and height as needed
+                  }
+                : {
+                    url: "/map_marker.png", // Path to your custom marker
+                  }
+            }
+          />
         </GoogleMap>
       ) : (
         <div className="w-full h-full bg-gray-200 rounded-xl text-xs font-medium text-gray-600 flex items-center justify-center">
