@@ -13,6 +13,7 @@ function GoogleMaps({ state, setAddress, address }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: `${import.meta.env.VITE_APP_GMAPS_KEY}`,
   });
+
   const {
     setLatitude,
     setLongitude,
@@ -118,42 +119,42 @@ function GoogleMaps({ state, setAddress, address }) {
 
   useEffect(() => {
     userInput !== "" && handleSetAddress();
-  }, [userInput, address]);
+  }, [userInput]);
+
+  if (!isLoaded) {
+    return (
+      <div className="w-full h-full bg-gray-200 rounded-xl text-xs font-medium text-gray-600 flex items-center justify-center">
+        Please select a valid state.
+      </div>
+    );
+  }
 
   return (
-    <>
-      {isLoaded && state !== "" ? (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={25}
-          onClick={(e) => handleMapClick(e)}
-        >
-          {/* Render a marker for the user */}
-          <Marker
-            key={`${latitude}-${longitude}`}
-            position={{
-              lat: latitude,
-              lng: longitude,
-            }}
-            icon={
-              isLoaded
-                ? {
-                    url: "/map_marker.png", // Path to your custom marker
-                    scaledSize: new google.maps.Size(50, 50), // Adjust width and height as needed
-                  }
-                : {
-                    url: "/map_marker.png", // Path to your custom marker
-                  }
-            }
-          ></Marker>
-        </GoogleMap>
-      ) : (
-        <div className="w-full h-full bg-gray-200 rounded-xl text-xs font-medium text-gray-600 flex items-center justify-center">
-          Please select a valid state.
-        </div>
-      )}
-    </>
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      center={center}
+      zoom={25}
+      onClick={(e) => handleMapClick(e)}
+    >
+      {/* Render a marker for the user */}
+      <Marker
+        key={`${latitude}-${longitude}`}
+        position={{
+          lat: latitude,
+          lng: longitude,
+        }}
+        icon={
+          isLoaded
+            ? {
+                url: "/map_marker.png", // Path to your custom marker
+                scaledSize: new google.maps.Size(50, 50), // Adjust width and height as needed
+              }
+            : {
+                url: "/map_marker.png", // Path to your custom marker
+              }
+        }
+      ></Marker>
+    </GoogleMap>
   );
 }
 
