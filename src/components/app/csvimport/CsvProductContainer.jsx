@@ -83,9 +83,7 @@ const CsvProductContainer = ({
     setDescription(product?.description);
     setQuantity(product?.quantity);
 
-    console.log(product?.categoryId, product, "sdfsdfsdf");
-
-    setSelectedCategory(product?.categoryId);
+    // setSelectedCategory(product?.categoryId);
     // setSelectedSubCategory(product?.subCategoryId);
     setSelectedDays(
       typeof product?.availableDays === "string"
