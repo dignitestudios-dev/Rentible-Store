@@ -119,7 +119,7 @@ function GoogleMaps({ state, setAddress, address }) {
   };
 
   useEffect(() => {
-    userInput !== "" && handleSetAddress();
+    userInput && userInput !== "" && handleSetAddress();
   }, [userInput]);
 
   if (!isLoaded) {
