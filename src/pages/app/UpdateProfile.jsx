@@ -37,6 +37,14 @@ const UpdateProfile = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const [latLng, setLatLng] = useState(
+    {
+      lat: null,
+      lng: null
+    }
+
+  )
+
   const [coverImage, setCoverImage] = useState(null);
   const [coverImageUrl, setCoverImageUrl] = useState(null);
 
@@ -77,34 +85,34 @@ const UpdateProfile = () => {
     }
   };
 
-  const getCoordinates = async (address) => {
-    const API_KEY = import.meta.env.VITE_APP_GMAPS_KEY; // Replace with your Google Maps API key
-    const formattedAddress = encodeURIComponent(address); // Encode the address
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${API_KEY}`;
+  // const getCoordinates = async (address) => {
+  //   const API_KEY = import.meta.env.VITE_APP_GMAPS_KEY; // Replace with your Google Maps API key
+  //   const formattedAddress = encodeURIComponent(address); // Encode the address
+  //   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${formattedAddress}&key=${API_KEY}`;
 
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      if (data.status === "OK") {
-        const { lat, lng } = data.results[0].geometry.location;
-        console.log("Latitude:", lat, "Longitude:", lng);
-        return [lat, lng];
-      } else if (data.status === "ZERO_RESULTS") {
-        ErrorToast("Invalid address: No results found.");
-        return null;
-      } else {
-        ErrorToast(
-          "Error:",
-          data.status,
-          data.error_message || "Unknown error."
-        );
-        return null;
-      }
-    } catch (error) {
-      ErrorToast("Error fetching geolocation:", error);
-      return null;
-    }
-  };
+  //   try {
+  //     const response = await fetch(url);
+  //     const data = await response.json();
+  //     if (data.status === "OK") {
+  //       const { lat, lng } = data.results[0].geometry.location;
+  //       console.log("Latitude:", lat, "Longitude:", lng);
+  //       return [lat, lng];
+  //     } else if (data.status === "ZERO_RESULTS") {
+  //       ErrorToast("Invalid address: No results found.");
+  //       return null;
+  //     } else {
+  //       ErrorToast(
+  //         "Error:",
+  //         data.status,
+  //         data.error_message || "Unknown error."
+  //       );
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     ErrorToast("Error fetching geolocation:", error);
+  //     return null;
+  //   }
+  // };
 
   const [open, setOpen] = useState(false);
 
@@ -323,11 +331,10 @@ const UpdateProfile = () => {
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full h-[49px] border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
-                    errors?.name && touched?.name
-                      ? "border-red-500"
-                      : "border-[#D9D9D9]"
-                  }`}
+                  className={`w-full h-[49px] border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${errors?.name && touched?.name
+                    ? "border-red-500"
+                    : "border-[#D9D9D9]"
+                    }`}
                   placeholder="Store Name"
                 />
 
@@ -479,11 +486,10 @@ const UpdateProfile = () => {
                     value={values.zipCode}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`w-full h-full border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
-                      errors?.zipCode && touched?.zipCode
-                        ? "border-red-500"
-                        : "border-[#D9D9D9]"
-                    }`}
+                    className={`w-full h-full border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${errors?.zipCode && touched?.zipCode
+                      ? "border-red-500"
+                      : "border-[#D9D9D9]"
+                      }`}
                     placeholder="Zip Code"
                     maxLength={5}
                   />
@@ -502,11 +508,10 @@ const UpdateProfile = () => {
                 value={values.description}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={`w-full h-32 bg-[#F8F8F899] border-[0.8px] outline-none rounded-[8px] placeholder:text-[#959393] text-[#262626] p-3 text-[16px] font-normal leading-[20.4px] resize-none ${
-                  errors?.description && touched?.description
-                    ? "border-red-500"
-                    : "border-[#D9D9D9]"
-                }`}
+                className={`w-full h-32 bg-[#F8F8F899] border-[0.8px] outline-none rounded-[8px] placeholder:text-[#959393] text-[#262626] p-3 text-[16px] font-normal leading-[20.4px] resize-none ${errors?.description && touched?.description
+                  ? "border-red-500"
+                  : "border-[#D9D9D9]"
+                  }`}
                 placeholder="Store Description"
               ></textarea>
               {errors.description && touched.description ? (
@@ -542,11 +547,10 @@ const UpdateProfile = () => {
                           setUserInput(e.target.value);
                         }}
                         onBlur={handleBlur}
-                        className={`w-full h-full border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
-                          errors?.address && touched?.address
-                            ? "border-red-500"
-                            : "border-[#D9D9D9]"
-                        }`}
+                        className={`w-full h-full border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${errors?.address && touched?.address
+                          ? "border-red-500"
+                          : "border-[#D9D9D9]"
+                          }`}
                         placeholder="Street Address"
                       />
                     </Autocomplete>
@@ -570,11 +574,10 @@ const UpdateProfile = () => {
                       handleChange(e);
                     }}
                     onBlur={handleBlur}
-                    className={`w-full h-full border-[0.8px]  bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
-                      errors?.apartment && touched?.apartment
-                        ? "border-red-500"
-                        : "border-[#D9D9D9]"
-                    }`}
+                    className={`w-full h-full border-[0.8px]  bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${errors?.apartment && touched?.apartment
+                      ? "border-red-500"
+                      : "border-[#D9D9D9]"
+                      }`}
                     placeholder="Apt#"
                   />
                 </div>
@@ -588,9 +591,9 @@ const UpdateProfile = () => {
 
             <div className="w-full h-48 flex flex-col gap-1 justify-start items-start">
               <GoogleMaps
-                state={values.state}
                 address={userInput}
                 setAddress={setUserInput}
+                setLatLng={setLatLng}
               />
             </div>
           </div>

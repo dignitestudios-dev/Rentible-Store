@@ -9,7 +9,7 @@ import axios from "axios";
 import { AppContext } from "../../context/AppContext";
 import { ErrorToast } from "../global/Toaster";
 
-function GoogleMaps({ state, setAddress, address }) {
+function GoogleMaps({ setAddress, address, setLatLng }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: `${import.meta.env.VITE_APP_GMAPS_KEY}`,
   });
@@ -53,6 +53,10 @@ function GoogleMaps({ state, setAddress, address }) {
     const longitude = latLng.lng();
     setLatitude(latitude ? latitude : 0);
     setLongitude(longitude ? longitude : 0);
+    setLatLng({
+      lat: latitude,
+      lng: longitude
+    })
 
     // Perform reverse geocoding
     axios
@@ -64,6 +68,7 @@ function GoogleMaps({ state, setAddress, address }) {
         const address = response.data.results[1].formatted_address;
         setUserInput(address);
         setSelectedLocation({ latitude, longitude, address });
+
         try {
           setLatitude(latitude);
           setLongitude(longitude);
@@ -95,6 +100,10 @@ function GoogleMaps({ state, setAddress, address }) {
           const { lat, lng } = response.data.results[0].geometry.location;
           setLatitude(lat ? lat : 0);
           setLongitude(lng ? lng : 0);
+          setLatLng({
+            lat: lat,
+            lng: lng
+          })
           setSelectedLocation({
             latitude: lat,
             longitude: lng,
@@ -106,6 +115,10 @@ function GoogleMaps({ state, setAddress, address }) {
           //     : ""
           // );
         } else {
+          setLatLng({
+            lat: 0,
+            lng: 0
+          })
           setLatitude(0);
           setLongitude(0);
           setAddress("");

@@ -28,6 +28,13 @@ const AddProduct = () => {
     setLatitude,
     setLongitude,
   } = useContext(AppContext);
+  const [latLng, setLatLng] = useState(
+    {
+      lat: null,
+      lng: null
+    }
+
+  )
   const [val, setval] = useState("");
   const [selectedPickupTime, setSelectedPickupTime] = useState(null);
   const [selectedDropOffTime, setSelectedDropOffTime] = useState(null);
@@ -265,18 +272,16 @@ const AddProduct = () => {
                 <button
                   type="button"
                   onClick={() => setIsAddNew(false)}
-                  className={`w-full h-full rounded-[6px]  flex items-center justify-center text-[12px] font-normal leading-[15.3px] ${
-                    !isAddNew ? "bg-orange-500 text-white" : "text-[#505050]"
-                  }`}
+                  className={`w-full h-full rounded-[6px]  flex items-center justify-center text-[12px] font-normal leading-[15.3px] ${!isAddNew ? "bg-orange-500 text-white" : "text-[#505050]"
+                    }`}
                 >
                   Same as profile
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsAddNew(true)}
-                  className={`w-full h-full rounded-[6px]  flex items-center justify-center text-[12px] font-normal leading-[15.3px] ${
-                    isAddNew ? "bg-orange-500 text-white" : "text-[#505050]"
-                  } `}
+                  className={`w-full h-full rounded-[6px]  flex items-center justify-center text-[12px] font-normal leading-[15.3px] ${isAddNew ? "bg-orange-500 text-white" : "text-[#505050]"
+                    } `}
                 >
                   + Add New
                 </button>
@@ -305,17 +310,16 @@ const AddProduct = () => {
               placeholder={"ABCD, 12345, Street 2, Florida, USA"}
             />
             <div className="w-full h-[175px] rounded-[16px]">
-              <GoogleMaps setAddress={setUserInput} />
+              <GoogleMaps setAddress={setUserInput} address={userInput} setLatLng={setLatLng} />
             </div>
           </div>
         </div>
         <div className="w-full xl:w-[423px] h-auto flex flex-col gap-3 justify-start items-start">
           <div
-            className={`w-full h-auto ${
-              errors?.browse && touched?.browse
-                ? " border border-red-500"
-                : "border-[#D9D9D9]"
-            } rounded-[18px] bg-white flex flex-col p-5 justify-start items-start gap-5 `}
+            className={`w-full h-auto ${errors?.browse && touched?.browse
+              ? " border border-red-500"
+              : "border-[#D9D9D9]"
+              } rounded-[18px] bg-white flex flex-col p-5 justify-start items-start gap-5 `}
           >
             <h1 className="text-[24px] font-medium leading-[36px]">
               Upload Image

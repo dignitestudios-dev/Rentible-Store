@@ -173,9 +173,8 @@ const CsvProductContainer = ({
     >
       <div className="w-full h-auto flex flex-col-reverse lg:flex-row gap-3 justify-start items-start ">
         <div
-          className={`w-full rounded-[18px] bg-white  h-auto flex flex-col gap-3 justify-start items-start ${
-            error ? "border border-red-500" : ""
-          }`}
+          className={`w-full rounded-[18px] bg-white  h-auto flex flex-col gap-3 justify-start items-start ${error ? "border border-red-500" : ""
+            }`}
         >
           <div className="w-full grid grid-cols-3 gap-4 justify-start items-start">
             <div className="w-full h-auto rounded-[18px] bg-white  flex flex-col p-5 justify-start items-start gap-5">
@@ -278,7 +277,7 @@ const CsvProductContainer = ({
                   error={error}
                 />
                 <div className="w-full h-[175px] rounded-[16px]">
-                  <GoogleMaps address={address} setAddress={setUserInput} />
+                  <GoogleMaps address={address} setAddress={setUserInput} setLatLng={setLatLng} />
                 </div>
               </div>
             </div>

@@ -32,6 +32,13 @@ const EditProduct = () => {
     setLatitude,
     setLongitude,
   } = useContext(AppContext);
+
+  const [latLng, setLatLng] = useState(
+    {
+      lat: null,
+      lng: null
+    }
+  )
   const [val, setval] = useState("");
   const [selectedPickupTime, setSelectedPickupTime] = useState(null);
   const [selectedDropOffTime, setSelectedDropOffTime] = useState(null);
@@ -355,7 +362,7 @@ const EditProduct = () => {
               placeholder={"ABCD, 12345, Street 2, Florida, USA"}
             />
             <div className="w-full h-[175px] rounded-[16px]">
-              <GoogleMaps address={userInput} setAddress={setUserInput} />
+              <GoogleMaps address={userInput} setAddress={setUserInput} setLatLng={setLatLng} />
             </div>
           </div>
         </div>

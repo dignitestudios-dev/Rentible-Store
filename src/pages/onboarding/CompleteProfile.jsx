@@ -31,6 +31,13 @@ const CompleteProfile = () => {
   } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [latLng, setLatLng] = useState(
+    {
+      lat: null,
+      lng: null
+    }
+
+  )
 
   const [coverImage, setCoverImage] = useState(null);
   const [coverImageUrl, setCoverImageUrl] = useState(null);
@@ -391,11 +398,10 @@ const CompleteProfile = () => {
                   value={values.zipCode}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full h-full border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
-                    errors?.zipCode && touched?.zipCode
-                      ? "border-red-500"
-                      : "border-[#D9D9D9]"
-                  }`}
+                  className={`w-full h-full border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${errors?.zipCode && touched?.zipCode
+                    ? "border-red-500"
+                    : "border-[#D9D9D9]"
+                    }`}
                   placeholder="Zip Code"
                   maxLength={5}
                 />
@@ -435,11 +441,10 @@ const CompleteProfile = () => {
                         setUserInput(e.target.value);
                       }}
                       onBlur={handleBlur}
-                      className={`w-full h-full border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
-                        errors?.address && touched?.address
-                          ? "border-red-500"
-                          : "border-[#D9D9D9]"
-                      }`}
+                      className={`w-full h-full border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${errors?.address && touched?.address
+                        ? "border-red-500"
+                        : "border-[#D9D9D9]"
+                        }`}
                       placeholder="Street Address"
                     />
                   </Autocomplete>
@@ -463,11 +468,10 @@ const CompleteProfile = () => {
                     handleChange(e);
                   }}
                   onBlur={handleBlur}
-                  className={`w-full h-full border-[0.8px] placeholder:text-xs bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
-                    errors?.apartment && touched?.apartment
-                      ? "border-red-500"
-                      : "border-[#D9D9D9]"
-                  }`}
+                  className={`w-full h-full border-[0.8px] placeholder:text-xs bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${errors?.apartment && touched?.apartment
+                    ? "border-red-500"
+                    : "border-[#D9D9D9]"
+                    }`}
                   placeholder="Apt. (Optional)"
                 />
               </div>
@@ -480,7 +484,7 @@ const CompleteProfile = () => {
           </div>
 
           <div className="w-full h-48 flex flex-col gap-1 justify-start items-start">
-            <GoogleMaps state={values.state} />
+            <GoogleMaps setAddress={setUserInput} address={userInput} setLatLng={setLatLng} />
           </div>
         </div>
         <span className="lg:h-[261px] w-full h-[1px] lg:w-[1px] bg-[#0000001F] rounded-full"></span>
@@ -493,11 +497,10 @@ const CompleteProfile = () => {
               value={values.description}
               onChange={handleChange}
               onBlur={handleBlur}
-              className={`w-full h-64 bg-[#F8F8F899] border-[0.8px] outline-none rounded-[8px] placeholder:text-[#959393] text-[#262626] p-3 text-[16px] font-normal leading-[20.4px] resize-none ${
-                errors?.description && touched?.description
-                  ? "border-red-500"
-                  : "border-[#D9D9D9]"
-              }`}
+              className={`w-full h-64 bg-[#F8F8F899] border-[0.8px] outline-none rounded-[8px] placeholder:text-[#959393] text-[#262626] p-3 text-[16px] font-normal leading-[20.4px] resize-none ${errors?.description && touched?.description
+                ? "border-red-500"
+                : "border-[#D9D9D9]"
+                }`}
               placeholder="Store Description"
             ></textarea>
             {errors.description && touched.description ? (
