@@ -115,8 +115,8 @@ const EditProduct = () => {
     values.pricePerHour = product?.pricePerHour;
     values.quantity = product?.quantity;
     setCover(coverIndex);
-    // setUserInput(product?.pickupAddress);
-    // values.pickupAddress = product?.pickupAddress;
+    setUserInput(product?.pickupAddress);
+    values.pickupAddress = product?.pickupAddress;
 
     setPreviews(allImages);
     setPreviewsToSend(allImages);
@@ -196,14 +196,15 @@ const EditProduct = () => {
     });
 
   useEffect(() => {
-    if (isAddNew) {
-      setUserInput(product?.pickupAddress);
-      values.pickupAddress = product?.pickupAddress;
-    } else {
+    if (!isAddNew) {
       setUserInput(store?.address);
       values.pickupAddress = store?.address;
+    } else if (isAddNew) {
+      setUserInput(product?.pickupAddress);
+      values.pickupAddress = product?.pickupAddress;
     }
   }, [isAddNew]);
+
 
   return (
     <form

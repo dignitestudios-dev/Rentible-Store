@@ -57,8 +57,7 @@ function GoogleMaps({ state, setAddress, address }) {
     // Perform reverse geocoding
     axios
       .get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${
-          import.meta.env.VITE_APP_GMAPS_KEY
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${import.meta.env.VITE_APP_GMAPS_KEY
         }`
       )
       .then((response) => {
@@ -69,7 +68,7 @@ function GoogleMaps({ state, setAddress, address }) {
           setLatitude(latitude);
           setLongitude(longitude);
           setAddress(address);
-        } catch (error) {}
+        } catch (error) { }
       })
       .catch((error) => {
         console.log("Error fetching address:", error);
@@ -88,8 +87,7 @@ function GoogleMaps({ state, setAddress, address }) {
     // Perform geocoding for the entered address
     axios
       .get(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${userInput}&key=${
-          import.meta.env.VITE_APP_GMAPS_KEY
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${import.meta.env.VITE_APP_GMAPS_KEY
         }`
       )
       .then((response) => {
@@ -100,13 +98,13 @@ function GoogleMaps({ state, setAddress, address }) {
           setSelectedLocation({
             latitude: lat,
             longitude: lng,
-            address: userInput,
+            address: address,
           });
-          setAddress(
-            response?.data?.results[0]
-              ? response?.data?.results[0]?.formatted_address
-              : ""
-          );
+          // setAddress(
+          //   response?.data?.results[0]
+          //     ? response?.data?.results[0]?.formatted_address
+          //     : ""
+          // );
         } else {
           setLatitude(0);
           setLongitude(0);
@@ -119,8 +117,8 @@ function GoogleMaps({ state, setAddress, address }) {
   };
 
   useEffect(() => {
-    userInput && userInput !== "" && handleSetAddress();
-  }, [userInput]);
+    address !== "" && handleSetAddress();
+  }, [address]);
 
   if (!isLoaded) {
     return (
