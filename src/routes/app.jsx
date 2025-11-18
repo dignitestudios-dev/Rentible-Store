@@ -19,6 +19,7 @@ import CustomerDetails from "../pages/app/CustomerDetails";
 import Wallet from "../pages/app/Wallet";
 import Success from "../pages/app/Success";
 import Refresh from "../pages/app/Refresh";
+import Tickets from "../pages/app/Tickets";
 
 export const app = [
   {
@@ -115,6 +116,11 @@ export const app = [
     title: "Messages",
     url: "/messages/:chatId",
     page: <AppLayout page={<Messages />} />,
+  },
+  {
+    title: "Tickets",
+    url: "/ticket",
+    page: <AppLayout page={<Tickets />} />,
   },
 
   {

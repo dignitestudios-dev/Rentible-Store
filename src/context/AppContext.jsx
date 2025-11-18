@@ -16,6 +16,7 @@ export const AppContextProvider = ({ children }) => {
   // notifications:
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
+  const [rejectReason, setRejectReason] = useState(Cookies.get("rejectReason"));
   const [notification, setNotification] = useState({ title: "", body: "" });
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -39,26 +40,42 @@ export const AppContextProvider = ({ children }) => {
   };
 
   onMessageListener()
-    .then((payload) => {
-      const data = JSON.parse(payload?.data?.data);
-      let route = null;
-      if (data?.type == "booking") {
-        route = `/rental-tracking/${data?.booking?._id}`;
-      } else if (data?.type == "product") {
-        route = `/products/${data?.product?._id}`;
-      } else if (data?.type == "chat") {
-        route = `/messages/${data?.chatUser?.chatId}`;
+  .then((payload) => {
+    let data = {};
+
+    try {
+      if (payload?.data?.data) {
+        data = JSON.parse(payload.data.data);
       } else {
-        // WarningToast("Can't route. Something went wrong.");
+        console.warn("No JSON data found in payload:", payload);
         return;
       }
-      NotificationToast({
-        title: payload.notification.title,
-        message: payload.notification.body,
-        route: route,
-      });
-    })
-    .catch((err) => console.log("failed: ", err));
+    } catch (err) {
+      console.error("Invalid JSON in FCM payload:", err, payload?.data?.data);
+      return; // Stop execution — invalid payload
+    }
+
+    let route = null;
+
+    if (data?.type === "booking") {
+      route = `/rental-tracking/${data?.booking?._id}`;
+    } else if (data?.type === "product") {
+      route = `/products/${data?.product?._id}`;
+    } else if (data?.type === "chat") {
+      route = `/messages/${data?.chatUser?.chatId}`;
+    } else {
+      console.warn("Unknown notification type:", data?.type);
+      return;
+    }
+
+    NotificationToast({
+      title: payload?.notification?.title || "Notification",
+      message: payload?.notification?.body || "",
+      route,
+    });
+  })
+  .catch((err) => console.error("onMessageListener failed:", err));
+
 
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
@@ -94,6 +111,8 @@ export const AppContextProvider = ({ children }) => {
         setLatLng,
         unreadCount,
         setUnreadCount,
+        setRejectReason,
+        rejectReason,
       }}
     >
       {children}

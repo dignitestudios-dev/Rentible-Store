@@ -13,7 +13,7 @@ const CsvProductDayPicker = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isAllDay, setIsAllDay] = useState(false);
   const daysOfWeek = [
-    "All Day",
+    "All Days",
     "Monday",
     "Tuesday",
     "Wednesday",
@@ -27,8 +27,8 @@ const CsvProductDayPicker = ({
 
   const toggleDaySelection = (day) => {
     setSelectedDays((prev) => {
-      const isAllDaySelected = day === "All Day";
-      const allDays = daysOfWeek.filter((d) => d !== "All Day");
+      const isAllDaySelected = day === "All Days";
+      const allDays = daysOfWeek.filter((d) => d !== "All Days");
 
       if (isAllDaySelected) {
         const isCurrentlyAllSelected = prev.length === allDays.length;

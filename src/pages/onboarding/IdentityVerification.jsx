@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   BigCameraIcon,
   CameraIcon,
@@ -17,12 +17,14 @@ import { FiLoader } from "react-icons/fi";
 import { ErrorToast, SuccessToast } from "../../components/global/Toaster";
 import axios from "../../axios";
 import Cookies from "js-cookie";
+import { AppContext } from "../../context/AppContext";
 
 const IdentityVerification = () => {
   const navigate = useNavigate();
   const [veirified, setVerified] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const { rejectReason } = useContext(AppContext);
+console.log(rejectReason,"rejectReason")
   const [identificationFront, setIdentificationFront] = useState(null);
   const [identificationFrontUrl, setIdentificationFrontUrl] = useState(null);
 
@@ -181,6 +183,11 @@ const IdentityVerification = () => {
         <p className="text-[18px] font-normal text-center leading-[27px] text-[#262626]">
           Take a Front and Back Image and Owner Certification to Continue
         </p>
+         {rejectReason && (
+    <div className="mt-4 p-3 w-full lg:w-[768px] bg-red-100 border border-red-400 text-red-700 rounded-lg text-center">
+      <strong>Reason for rejection:</strong> {rejectReason}
+    </div>
+  )}
       </div>
 
       <div className="w-full lg:w-[768px] mt-8 grid grid-cols-1 lg:grid-cols-2 justify-center gap-6 items-start">

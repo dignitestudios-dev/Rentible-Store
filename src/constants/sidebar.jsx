@@ -49,6 +49,12 @@ export const sidebar = [
     dark_icon: "/sidebar/issues_black.png",
   },
   {
+    title: "Tickets",
+    url: "/ticket",
+    light_icon: "/sidebar/issues_white.png",
+    dark_icon: "/sidebar/issues_black.png",
+  },
+  {
     title: "Settings",
     url: "/settings",
     light_icon: "/sidebar/settings_white.png",

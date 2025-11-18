@@ -299,6 +299,7 @@ const ProductDetails = () => {
                 onClick={() => setIndex(index)}
                 className="relative w-full h-16 cursor-pointer bg-gray-200 border border-gray-300  rounded-xl"
               >
+                
                 <img
                   src={
                     preview ||

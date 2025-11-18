@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { OrangeLogo } from "../../assets/export";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
@@ -15,11 +15,12 @@ import Cookies from "js-cookie";
 import { FiLoader } from "react-icons/fi";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase.js";
+import { AppContext } from "../../context/AppContext.jsx";
 
 const Login = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const navigate = useNavigate();
-
+  const { setRejectReason } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
 
   const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
@@ -51,6 +52,10 @@ const Login = () => {
             Cookies.set("user", JSON.stringify(userCredential), {
               expires: 15,
             });
+            Cookies.set("rejectReason", store?.rejectReason, {
+              expires: 15,
+            });
+            setRejectReason(store?.rejectReason);
             if (
               store?.isEmailVerified &&
               store?.isPhoneVerified &&

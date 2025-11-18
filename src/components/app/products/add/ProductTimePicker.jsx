@@ -63,6 +63,31 @@ const ProductTimePicker = ({
     return times;
   }
   useEffect(() => {
+    if (selectedTime) {
+      // Default date = today
+      let baseDate = new Date();
+
+      if (isDropOff && pickupTime) {
+        // Convert pickup time to date for comparison
+        const pickupDate = new Date(convertToEpochTime(pickupTime) * 1000);
+        const dropOffDate = new Date(convertToEpochTime(selectedTime) * 1000);
+
+        // ⚠️ If drop-off time is earlier than pickup time, assume next day
+        if (dropOffDate <= pickupDate) {
+          pickupDate.setDate(pickupDate.getDate() + 1);
+          baseDate = pickupDate;
+        }
+      }
+
+      // Convert selected time to epoch using adjusted base date
+      values[name] = convertToEpochTime(selectedTime, baseDate);
+      setIsOpen(false);
+    } else {
+      values[name] = "";
+    }
+  }, [selectedTime]);
+
+  useEffect(() => {
     generateFullDayTimeArray(pickupTime);
   }, [pickupTime]);
 

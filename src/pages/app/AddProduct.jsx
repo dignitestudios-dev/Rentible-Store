@@ -39,7 +39,8 @@ const AddProduct = () => {
   const [selectedPickupTime, setSelectedPickupTime] = useState(null);
   const [selectedDropOffTime, setSelectedDropOffTime] = useState(null);
   const [selectedDays, setSelectedDays] = useState([]);
-
+console.log(selectedPickupTime,"selectedPickupTime")
+console.log(selectedDropOffTime,"selectedDropOffTime")
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [categories, setCategories] = useState([]); // Updated variable name to camelCase

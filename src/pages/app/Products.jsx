@@ -172,6 +172,7 @@ const Products = () => {
               </span>
               <input
                 type="file"
+                accept=".csv"
                 className="hidden"
                 onChange={handleFileChange}
                 id="csv-picker"

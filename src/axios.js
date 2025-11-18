@@ -5,6 +5,8 @@ import { UAParser } from "ua-parser-js";
 import { v4 as uuidv4 } from "uuid";
 
 export const baseUrl = "https://api.rentibles.com";
+// export const baseUrl = "http://192.168.9.15:3050/";
+
 // export const baseUrl = "https://155e-45-199-187-86.ngrok-free.app";
 
 const generateDeviceId = (rawId) => {
@@ -64,9 +66,9 @@ instance.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Handle unauthorized access
-      sessionStorage.clear();
-      Cookies.remove("token");
-      window.location.href = "/";
+      // sessionStorage.clear();
+      // Cookies.remove("token");
+      // window.location.href = "/";
     }
 
     return Promise.reject(error);
