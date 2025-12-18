@@ -40,42 +40,41 @@ export const AppContextProvider = ({ children }) => {
   };
 
   onMessageListener()
-  .then((payload) => {
-    let data = {};
+    .then((payload) => {
+      let data = {};
 
-    try {
-      if (payload?.data?.data) {
-        data = JSON.parse(payload.data.data);
+      try {
+        if (payload?.data?.data) {
+          data = JSON.parse(payload.data.data);
+        } else {
+          console.warn("No JSON data found in payload:", payload);
+          return;
+        }
+      } catch (err) {
+        console.error("Invalid JSON in FCM payload:", err, payload?.data?.data);
+        return; // Stop execution — invalid payload
+      }
+
+      let route = null;
+
+      if (data?.type === "booking") {
+        route = `/rental-tracking/${data?.booking?._id}`;
+      } else if (data?.type === "product") {
+        route = `/products/${data?.product?._id}`;
+      } else if (data?.type === "chat") {
+        route = `/messages/${data?.chatUser?.chatId}`;
       } else {
-        console.warn("No JSON data found in payload:", payload);
+        console.warn("Unknown notification type:", data?.type);
         return;
       }
-    } catch (err) {
-      console.error("Invalid JSON in FCM payload:", err, payload?.data?.data);
-      return; // Stop execution — invalid payload
-    }
 
-    let route = null;
-
-    if (data?.type === "booking") {
-      route = `/rental-tracking/${data?.booking?._id}`;
-    } else if (data?.type === "product") {
-      route = `/products/${data?.product?._id}`;
-    } else if (data?.type === "chat") {
-      route = `/messages/${data?.chatUser?.chatId}`;
-    } else {
-      console.warn("Unknown notification type:", data?.type);
-      return;
-    }
-
-    NotificationToast({
-      title: payload?.notification?.title || "Notification",
-      message: payload?.notification?.body || "",
-      route,
-    });
-  })
-  .catch((err) => console.error("onMessageListener failed:", err));
-
+      NotificationToast({
+        title: payload?.notification?.title || "Notification",
+        message: payload?.notification?.body || "",
+        route,
+      });
+    })
+    .catch((err) => console.error("onMessageListener failed:", err));
 
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
