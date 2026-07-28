@@ -67,11 +67,10 @@ const ProductDayPicker = ({
         <button
           type="button"
           onClick={toggleDropdown}
-          className={`px-4 py-2 text-left w-full h-[49px] flex justify-between items-center rounded-[8px] outline-none ${
-            errors?.availableDays && touched?.availableDays
+          className={`px-4 py-2 text-left w-full h-[49px] flex justify-between items-center rounded-[8px] outline-none ${errors?.availableDays && touched?.availableDays
               ? " border border-red-500"
               : "border-[#D9D9D9]"
-          } focus:border bg-[#f8f8f8]/[0.6] focus:outline-none`}
+            } focus:border bg-[#f8f8f8]/[0.6] focus:outline-none`}
         >
           <span>
             {selectedDays?.length > 0 ? selectedDays?.join(", ") : placeholder}
@@ -97,11 +96,10 @@ const ProductDayPicker = ({
                   <button
                     type="button"
                     onClick={() => toggleDaySelection(day)}
-                    className={`w-[36px] transition-all duration-200 h-[18px] flex rounded-full ${
-                      selectedDays.includes(day) || isAllDay
+                    className={`w-[36px] transition-all duration-200 h-[18px] flex rounded-full ${selectedDays.includes(day) || isAllDay
                         ? "bg-orange-500 justify-end"
                         : "justify-start bg-[#d9d9d9]"
-                    }   p-[1.5px]`}
+                      }   p-[1.5px]`}
                   >
                     <span className="w-[15px] transition-all duration-200 h-[15px] rounded-full bg-white shadow "></span>
                   </button>

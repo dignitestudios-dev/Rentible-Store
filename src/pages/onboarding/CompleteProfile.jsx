@@ -50,15 +50,32 @@ const CompleteProfile = () => {
     document.getElementById("profilePicture").click();
   };
 
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
+
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        ErrorToast("File size must be less than 5MB.");
+        setLogo(null);
+        setLogoUrl(null);
+        setFieldValue("profilePicture", file);
+        setFieldTouched("profilePicture", true);
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogoUrl(reader.result);
       };
       reader.readAsDataURL(file);
       setLogo(file);
+      setFieldValue("profilePicture", file);
+      setFieldTouched("profilePicture", true);
+    } else {
+      setLogo(null);
+      setLogoUrl(null);
+      setFieldValue("profilePicture", "");
+      setFieldTouched("profilePicture", true);
     }
   };
 
@@ -70,12 +87,27 @@ const CompleteProfile = () => {
   const handleCoverChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        ErrorToast("File size must be less than 5MB.");
+        setCoverImage(null);
+        setCoverImageUrl(null);
+        setFieldValue("cover", file);
+        setFieldTouched("cover", true);
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setCoverImageUrl(reader.result);
       };
       reader.readAsDataURL(file);
       setCoverImage(file);
+      setFieldValue("cover", file);
+      setFieldTouched("cover", true);
+    } else {
+      setCoverImage(null);
+      setCoverImageUrl(null);
+      setFieldValue("cover", "");
+      setFieldTouched("cover", true);
     }
   };
 
@@ -108,7 +140,7 @@ const CompleteProfile = () => {
   //   }
   // };
 
-  const { values, handleBlur, handleChange, handleSubmit, errors, touched } =
+  const { values, handleBlur, handleChange, handleSubmit, errors, touched, setFieldValue, setFieldTouched } =
     useFormik({
       initialValues: completeProfileValues,
       validationSchema: completeProfileSchema,
@@ -215,11 +247,11 @@ const CompleteProfile = () => {
         </div>
 
         <div className="w-full lg:w-[1200px] mt-8 flex flex-col lg:flex-row justify-center gap-8 items-start">
-          <div className="w-full lg:w-[350px] h-auto  flex flex-col justify-start items-start gap-4">
-            <div className="w-full h-[126px]  relative rounded-[18px]">
+          <div className="w-full lg:w-[350px] h-auto flex flex-col justify-start items-start gap-4">
+            <div className="w-full h-[126px] relative rounded-[18px]">
               <div
                 onClick={handleCoverClick}
-                className="w-full h-[63px] border-[0.8px] flex justify-end p-2 items-end bg-[#FBFBFB] border-[#D9D9D9] rounded-t-[18px] "
+                className="w-full h-[63px] border-[0.8px] flex justify-end p-2 items-end bg-[#FBFBFB] border-[#D9D9D9] rounded-t-[18px] cursor-pointer overflow-hidden"
               >
                 {coverImageUrl ? (
                   <img
@@ -227,7 +259,7 @@ const CompleteProfile = () => {
                     className="w-full h-full object-scale-down rounded-t-[18px]"
                   />
                 ) : (
-                  <div className="w-auto  cursor-pointer flex justify-start items-center gap-1">
+                  <div className="w-auto cursor-pointer flex justify-start items-center gap-1">
                     <img src={CameraIcon} alt="camera_icon" />
                     <p className="text-xs font-medium ">Add Cover Image</p>
                   </div>
@@ -239,21 +271,12 @@ const CompleteProfile = () => {
                 name="cover"
                 accept="image/*"
                 className="hidden"
-                onBlur={handleBlur}
-                onChange={(e) => {
-                  handleCoverChange(e);
-                  handleChange(e);
-                }}
+                onChange={handleCoverChange}
               />
-              {errors.cover && touched.cover ? (
-                <p className="text-red-700 text-xs w-full flex border-x-[0.8px] border-[#D9D9D9] justify-end mr-1 bg-transparent font-medium">
-                  {errors.cover}
-                </p>
-              ) : null}
               <button
                 type="button"
                 onClick={handleLogoClick}
-                className="w-[86px] h-[86px] bg-[#FBFBFB] flex items-center justify-center absolute top-[20px] left-4 border-[0.8px] border-[#D9D9D9] rounded-full"
+                className="w-[86px] h-[86px] bg-[#FBFBFB] flex items-center justify-center absolute top-[20px] left-4 border-[0.8px] border-[#D9D9D9] rounded-full overflow-hidden z-10"
               >
                 {logoUrl ? (
                   <img
@@ -268,32 +291,31 @@ const CompleteProfile = () => {
                   />
                 )}
               </button>
-              {errors.profilePicture && touched.profilePicture ? (
-                <p className="text-red-700 text-xs w-full flex border-x-[0.8px] border-[#D9D9D9] justify-end mr-1 bg-transparent font-medium">
-                  {errors.profilePicture}
-                </p>
-              ) : null}
               <input
                 type="file"
                 id="profilePicture"
                 name="profilePicture"
                 accept="image/*"
                 className="hidden"
-                onBlur={handleBlur}
-                onChange={(e) => {
-                  handleLogoChange(e);
-                  handleChange(e);
-                }}
+                onChange={handleLogoChange}
               />
-              {!errors?.profilePicture && !errors?.cover && (
-                <div className="w-full h-[43px] border-x-[0.8px] flex justify-end  items-center  border-[#D9D9D9]  ">
-                  <div className="w-full pl-28  cursor-pointer flex justify-start items-center gap-1">
-                    <img src={CameraIcon} alt="camera_icon" />
-                    <p className="text-xs font-medium ">Add Profile Picture</p>
-                  </div>
+              <div className="w-full h-[63px] border-x-[0.8px] border-b-[0.8px] flex justify-end items-center border-[#D9D9D9] rounded-b-[18px] bg-[#FBFBFB]">
+                <div onClick={handleLogoClick} className="w-full pl-28 cursor-pointer flex justify-start items-center gap-1">
+                  <img src={CameraIcon} alt="camera_icon" />
+                  <p className="text-xs font-medium ">Add Profile Picture</p>
                 </div>
-              )}
+              </div>
             </div>
+            {errors.cover && touched.cover && (
+              <p className="text-red-700 text-xs font-medium">
+                {errors.cover}
+              </p>
+            )}
+            {errors.profilePicture && touched.profilePicture && (
+              <p className="text-red-700 text-xs font-medium">
+                {errors.profilePicture}
+              </p>
+            )}
             <div className="w-full h-auto grid grid-cols-2 gap-4 justify-start items-start">
               <div className="h-[49px] flex justify-start bg-[#F8F8F899] border-[0.8px] border-[#D9D9D9] items-start w-full relative  rounded-[8px]">
                 <input

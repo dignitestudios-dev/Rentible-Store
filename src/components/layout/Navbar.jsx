@@ -39,19 +39,23 @@ const Navbar = () => {
 
   return (
     <div
-      className={`h-14 lg:h-[70px] ${
-        location?.pathname == "/messages" && "border-b"
-      } flex justify-between w-full items-center bg-white pr-3`}
+      className={`h-14 lg:h-[70px] ${location?.pathname == "/messages" && "border-b"
+        } flex justify-between w-full items-center bg-white pr-3`}
     >
       <div className="w-auto ml-3 h-full flex items-center justify-start lg:ml-[66px]">
         <button onClick={() => setSidebarOpen((prev) => !prev)}>
           <HiOutlineMenuAlt2 className="text-3xl lg:hidden" />
         </button>
-        <img
-          src="/orange_logo.png"
-          alt=""
-          className="h-10 md:block hidden  lg:h-[52.48px]"
-        />
+        <div onClick={() => {
+          localStorage.setItem("activeLink", "Dashboard");
+          navigate('/dashboard')
+        }} className="cursor-pointer">
+          <img
+            src="/orange_logo.png"
+            alt=""
+            className="h-10 md:block hidden  lg:h-[52.48px]"
+          />
+        </div>
       </div>
       <div className="w-auto h-full flex justify-start items-center gap-4">
         <Link

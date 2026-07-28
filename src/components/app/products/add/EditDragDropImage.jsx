@@ -30,22 +30,34 @@ const EditDragDropImage = ({
       reader.onerror = (error) => reject(error);
     });
 
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
+
   // Add files to the state with validation
   const addFiles = async (newFiles) => {
-    const totalFiles = files.length + newFiles.length + previews?.length;
+    const oversizedFiles = newFiles.filter((file) => file.size > MAX_FILE_SIZE);
+    if (oversizedFiles.length > 0) {
+      ErrorToast("File size must be less than 5MB.");
+    }
+
+    let validFiles = newFiles.filter((file) => file.size <= MAX_FILE_SIZE);
+    if (validFiles.length === 0) return;
+
+    const totalFiles = files.length + validFiles.length + previews?.length;
 
     if (totalFiles > 6) {
       ErrorToast("You can only upload up to 6 files.");
-      newFiles = newFiles.slice(0, 6 - files.length); // Only allow enough to stay within the limit
+      validFiles = validFiles.slice(0, 6 - files.length); // Only allow enough to stay within the limit
     }
+
+    if (validFiles.length === 0) return;
 
     // Generate previews for new files
     const newPreviews = await Promise.all(
-      newFiles.map((file) => fileToBase64(file))
+      validFiles.map((file) => fileToBase64(file))
     );
 
     // Update state with new files and previews
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    setFiles((prevFiles) => [...prevFiles, ...validFiles]);
     setPreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
   };
 
@@ -69,6 +81,7 @@ const EditDragDropImage = ({
     );
 
     await addFiles(selectedFiles);
+    event.target.value = "";
   };
 
   // Remove File by Index
@@ -114,15 +127,13 @@ const EditDragDropImage = ({
           setIsDragging(true);
         }}
         onDragLeave={() => setIsDragging(false)}
-        className={`w-full ${
-          files?.length > 0
+        className={`w-full ${files?.length > 0
             ? "h-auto"
             : "h-[343px] p-4  bg-gray-50 border-2 border-dashed"
-        } rounded-[18px] flex flex-col gap-2 justify-center items-center  transition-all 
-          ${
-            isDragging
-              ? "border-gray-500 bg-gray-50 text-gray-700 animate-pulse"
-              : "border-gray-300  text-gray-700"
+          } rounded-[18px] flex flex-col gap-2 justify-center items-center  transition-all 
+          ${isDragging
+            ? "border-gray-500 bg-gray-50 text-gray-700 animate-pulse"
+            : "border-gray-300  text-gray-700"
           }`}
       >
         <input

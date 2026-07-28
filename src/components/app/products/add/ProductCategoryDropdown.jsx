@@ -40,11 +40,10 @@ const ProductCategoryDropdown = ({
         <button
           type="button"
           onClick={toggleDropdown}
-          className={`px-4 py-2 text-left w-full h-[49px] flex justify-between items-center rounded-[8px] outline-none focus:border bg-[#f8f8f8]/[0.6] focus:outline-none ${
-            errors[name] && touched[name]
+          className={`px-4 py-2 text-left w-full h-[49px] flex justify-between items-center rounded-[8px] outline-none focus:border bg-[#f8f8f8]/[0.6] focus:outline-none ${errors[name] && touched[name]
               ? " border border-red-500"
               : "border-[#D9D9D9]"
-          }`}
+            }`}
         >
           <span>{selectedCategory ? selectedCategory?.name : placeholder}</span>
           {isOpen ? <PiCaretUpBold /> : <PiCaretDownBold />}
@@ -66,11 +65,10 @@ const ProductCategoryDropdown = ({
                       setSelectedCategory(category);
                       setIsOpen(false);
                     }}
-                    className={`w-full px-4 py-2 cursor-pointer text-left text-sm flex justify-between items-center border-b-[0.8px] border-[#d9d9d9] transition-all duration-200 ${
-                      selectedCategory?._id === category?._id
+                    className={`w-full px-4 py-2 cursor-pointer text-left text-sm flex justify-between items-center border-b-[0.8px] border-[#d9d9d9] transition-all duration-200 ${selectedCategory?._id === category?._id
                         ? "bg-gray-200  justify-end"
                         : "justify-start "
-                    }`}
+                      }`}
                   >
                     <div className="w-auto flex items-center justify-start gap-2">
                       <img

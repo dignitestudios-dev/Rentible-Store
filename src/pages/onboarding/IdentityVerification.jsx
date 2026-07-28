@@ -28,10 +28,20 @@ console.log(rejectReason,"rejectReason")
   const [identificationFront, setIdentificationFront] = useState(null);
   const [identificationFrontUrl, setIdentificationFrontUrl] = useState(null);
 
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
+
   const handleDrop = (e, setFile, setFileUrl, fieldName) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        ErrorToast("File size must be less than 5MB.");
+        setFile(null);
+        setFileUrl(null);
+        setFieldValue(fieldName, file);
+        setFieldTouched(fieldName, true);
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setFileUrl(reader.result);
@@ -41,11 +51,38 @@ console.log(rejectReason,"rejectReason")
 
       // Update Formik field value
       setFieldValue(fieldName, file);
+      setFieldTouched(fieldName, true);
     }
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
+  };
+
+  const processSelectedFile = (file, setFile, setFileUrl, fieldName) => {
+    if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        ErrorToast("File size must be less than 5MB.");
+        setFile(null);
+        setFileUrl(null);
+        setFieldValue(fieldName, file);
+        setFieldTouched(fieldName, true);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFileUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setFile(file);
+      setFieldValue(fieldName, file);
+      setFieldTouched(fieldName, true);
+    } else {
+      setFile(null);
+      setFileUrl(null);
+      setFieldValue(fieldName, "");
+      setFieldTouched(fieldName, true);
+    }
   };
 
   const handleIdentificationFrontClick = (e) => {
@@ -55,14 +92,7 @@ console.log(rejectReason,"rejectReason")
 
   const handleIdentificationFrontChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setIdentificationFrontUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-      setIdentificationFront(file);
-    }
+    processSelectedFile(file, setIdentificationFront, setIdentificationFrontUrl, "identificationFront");
   };
 
   const [identificationBack, setIdentificationBack] = useState(null);
@@ -75,14 +105,7 @@ console.log(rejectReason,"rejectReason")
 
   const handleIdentificationBackChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setIdentificationBackUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-      setIdentificationBack(file);
-    }
+    processSelectedFile(file, setIdentificationBack, setIdentificationBackUrl, "identificationBack");
   };
 
   const [certificate, setCertificate] = useState(null);
@@ -95,14 +118,7 @@ console.log(rejectReason,"rejectReason")
 
   const handleCertificateChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCertificateUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-      setCertificate(file);
-    }
+    processSelectedFile(file, setCertificate, setCertificateUrl, "certificate");
   };
 
   const [proof, setProof] = useState(null);
@@ -115,14 +131,7 @@ console.log(rejectReason,"rejectReason")
 
   const handleProofChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProofUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
-      setProof(file);
-    }
+    processSelectedFile(file, setProof, setProofUrl, "proof");
   };
 
   const {
@@ -133,6 +142,7 @@ console.log(rejectReason,"rejectReason")
     errors,
     touched,
     setFieldValue,
+    setFieldTouched,
   } = useFormik({
     initialValues: identityVerificationValues,
     validationSchema: identityVerificationSchema,

@@ -125,9 +125,8 @@ const ProductTimePicker = ({
           type="button"
           disabled={disable()}
           onClick={toggleDropdown}
-          className={` px-4 py-2 text-left   w-full h-[49px] rounded-[8px] outline-none focus:border bg-[#f8f8f8]/[0.6] disabled:bg-gray-200  ${
-            errors[name] && touched[name] ? "border border-red-500" : ""
-          }  focus:outline-none `}
+          className={` px-4 py-2 text-left   w-full h-[49px] rounded-[8px] outline-none focus:border bg-[#f8f8f8]/[0.6] disabled:bg-gray-200  ${errors[name] && touched[name] ? "border border-red-500" : ""
+            }  focus:outline-none `}
         >
           {selectedTime ? `${selectedTime}` : "Select"}
         </button>
@@ -150,11 +149,10 @@ const ProductTimePicker = ({
                         type="button"
                         key={hour}
                         onClick={() => handleTimeChange(hour)}
-                        className={`w-full px-4 py-2 text-xs rounded-md text-left hover:bg-orange-200 ${
-                          selectedTime === hour
+                        className={`w-full px-4 py-2 text-xs rounded-md text-left hover:bg-orange-200 ${selectedTime === hour
                             ? "bg-orange-200 font-semibold"
                             : ""
-                        }`}
+                          }`}
                       >
                         {hour}
                       </button>

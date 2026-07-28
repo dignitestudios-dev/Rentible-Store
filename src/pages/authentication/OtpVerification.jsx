@@ -124,11 +124,10 @@ const OtpVerification = () => {
                 minLength={6}
                 maxLength={6}
                 onBlur={handleBlur}
-                className={`w-full h-[49px] border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${
-                  errors?.otp && touched?.otp
+                className={`w-full h-[49px] border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${errors?.otp && touched?.otp
                     ? "border-red-500"
                     : "border-[#D9D9D9]"
-                }`}
+                  }`}
                 placeholder="XXXXXX"
               />
               <button

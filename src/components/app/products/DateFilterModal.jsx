@@ -53,7 +53,7 @@ const DateFilterModal = ({
         className=" w-[431px] h-[166px] bg-white rounded-3xl flex flex-col items-start justify-center "
       >
         <div className="w-full text-white text-xl font-medium h-[30%] flex justify-center px-4 items-center rounded-t-3xl bg-[#f85e00]">
-          Select/Enter Date
+          Select Date
         </div>
         <Application
           theme={theme}

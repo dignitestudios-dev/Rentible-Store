@@ -57,19 +57,17 @@ const ProductRequests = () => {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `/request?search=${query}${
-          initialDate
-            ? `&startDate=${convertToUTCTimestamp(
-                formatDateToMMDDYYYY(initialDate)
-              )}`
-            : ""
-        }${
-          finalDate
-            ? `&endDate=${convertToUTCTimestamp(
-                formatDateToMMDDYYYY(finalDate),
-                "end"
-              )}`
-            : ""
+        `/request?search=${query}${initialDate
+          ? `&startDate=${convertToUTCTimestamp(
+            formatDateToMMDDYYYY(initialDate)
+          )}`
+          : ""
+        }${finalDate
+          ? `&endDate=${convertToUTCTimestamp(
+            formatDateToMMDDYYYY(finalDate),
+            "end"
+          )}`
+          : ""
         }&page=${currentPage}&limit=9`
       );
       setRequests(data?.data); // Store the actual data from the response
@@ -128,9 +126,8 @@ const ProductRequests = () => {
           </div>
 
           <div
-            className={`w-[330px] h-[316px] absolute top-28 lg:top-14 right-0 transition-all duration-300 bg-white rounded-[14px] shadow-md py-3 px-6 ${
-              openCalendar ? "translate-x-0" : "translate-x-[600px]"
-            } flex flex-col justify-start items-start z-50`}
+            className={`w-[330px] h-[316px] absolute top-28 lg:top-14 right-0 transition-all duration-300 bg-white rounded-[14px] shadow-md py-3 px-6 ${openCalendar ? "translate-x-0" : "translate-x-[600px]"
+              } flex flex-col justify-start items-start z-50`}
           >
             <span className="w-full h-9 text-[18px] font-semibold text-black flex items-center justify-start  border-b border-gray-300">
               Filter
@@ -217,9 +214,9 @@ const ProductRequests = () => {
         </div>
       </div>
 
-      <div className="w-full overflow-x-auto lg:overflow-x-hidden flex flex-col justify-start items-start">
-        <div className="min-w-[960px] w-full border-t border-x h-[49px] bg-[#FCFDFD] border-gray-300 rounded-t-[14px] grid grid-cols-12 ">
-          <span className="w-full px-4 col-span-2 flex items-center justify-start h-full ">
+      <div className="w-full overflow-x-auto flex flex-col justify-start items-start">
+        <div className="min-w-[960px] w-full border-t border-x h-[49px] bg-[#FCFDFD] border-gray-300 rounded-t-[14px] grid grid-cols-12 gap-3 px-4">
+          <span className="w-full col-span-2 flex items-center justify-start h-full ">
             <span className="text-[13px] font-medium">Name</span>
           </span>
           <span className="w-full col-span-2 flex items-center justify-start h-full ">
@@ -235,11 +232,11 @@ const ProductRequests = () => {
             <span className="text-[13px] font-medium">Description</span>
           </span>
 
-          <span className="w-full col-span-1 flex items-center justify-end h-full  px-4">
+          <span className="w-full col-span-1 flex items-center justify-end h-full">
             <span className="text-[13px] font-medium">Action</span>
           </span>
         </div>
-        <div className="min-w-[960px] w-full h-auto border divide-y divide-gray-300 border-gray-300 bg-white rounded-b-[14px] flex  flex-col justify-start items-start">
+        <div className="min-w-[960px] w-full h-auto border divide-y divide-gray-300 border-gray-300 bg-white rounded-b-[14px] flex flex-col justify-start items-start">
           {loading ? (
             [1, 2, 3, 4]?.map((item, key) => {
               return <RequestListSkeleton key={key} />;
@@ -248,51 +245,70 @@ const ProductRequests = () => {
             requests?.map((request, key) => {
               return (
                 <div
+                  key={request?._id || key}
                   onClick={() => {
                     setDetailOpen(true);
                     setSelectedRequest(request);
                   }}
-                  className="w-full cursor-pointer grid grid-cols-12 h-[77px] text-[#202224] "
+                  className="w-full cursor-pointer grid grid-cols-12 gap-3 h-[77px] text-[#202224] px-4"
                 >
-                  <span className="w-full px-4 col-span-2 flex items-center gap-2 justify-start h-full ">
-                    <span className="w-[44px] h-[44px] border border-[#F85E00] rounded-full flex items-center justify-center ">
+                  <span className="w-full col-span-2 flex items-center gap-2 justify-start h-full min-w-0 pr-2">
+                    <span className="w-[44px] h-[44px] shrink-0 border border-[#F85E00] rounded-full flex items-center justify-center overflow-hidden">
                       <img
                         src={
                           request?.user?.profilePicture ||
                           "https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="
                         }
                         alt="store_image"
-                        className="w-[38px] h-[38px] rounded-full"
+                        className="w-[38px] h-[38px] rounded-full object-cover"
                       />
                     </span>
-                    <span className="text-[13px] font-normal">
+                    <span
+                      className="text-[13px] font-normal truncate"
+                      title={request?.user?.name || "N/A"}
+                    >
                       {request?.user?.name || "N/A"}
                     </span>
                   </span>
-                  <span className="w-full col-span-2 flex items-center justify-start h-full ">
-                    <span className="text-[13px] font-normal">
+
+                  <span className="w-full col-span-2 flex items-center justify-start h-full min-w-0 pr-2">
+                    <span
+                      className="text-[13px] font-normal truncate"
+                      title={request?.user?.email || "N/A"}
+                    >
                       {request?.user?.email || "N/A"}
                     </span>
                   </span>
-                  <span className="w-full col-span-2 flex items-center justify-start h-full ">
-                    <span className="text-[13px] font-normal">
+
+                  <span className="w-full col-span-2 flex items-center justify-start h-full min-w-0 pr-2">
+                    <span
+                      className="text-[13px] font-normal truncate break-all"
+                      title={request?.name || "N/A"}
+                    >
                       {request?.name || "N/A"}
-                    </span>
-                  </span>
-                  <span className="w-full col-span-2 flex items-center justify-start h-full ">
-                    <span className="text-[13px] font-normal">
-                      {request?.category?.name || "N/A"}
-                    </span>
-                  </span>
-                  <span className="w-full col-span-3 flex items-center justify-start h-full ">
-                    <span className="text-[13px] font-normal">
-                      {request?.description?.length > 50
-                        ? request?.description?.slice(0, 50) + "..."
-                        : request?.description}
+
                     </span>
                   </span>
 
-                  <span className="w-full col-span-1 flex items-center justify-end h-full  px-6">
+                  <span className="w-full col-span-2 flex items-center justify-start h-full min-w-0 pr-2">
+                    <span
+                      className="text-[13px] font-normal line-clamp-2 break-words"
+                      title={request?.category?.name || "N/A"}
+                    >
+                      {request?.category?.name || "N/A"}
+                    </span>
+                  </span>
+
+                  <span className="w-full col-span-3 flex items-center justify-start h-full min-w-0 pr-2">
+                    <span
+                      className="text-[13px] font-normal line-clamp-2 break-words"
+                      title={request?.description || "N/A"}
+                    >
+                      {request?.description || "N/A"}
+                    </span>
+                  </span>
+
+                  <span className="w-full col-span-1 flex items-center justify-end h-full shrink-0">
                     <span className="text-[20px] font-normal">
                       <RxCaretRight />
                     </span>
@@ -336,11 +352,10 @@ const ProductRequests = () => {
                   <button
                     key={index}
                     onClick={() => setCurrentPage(index + 1)}
-                    className={`w-[33px] h-[33px]  ${
-                      currentPage == index + 1
+                    className={`w-[33px] h-[33px]  ${currentPage == index + 1
                         ? "bg-[#F85E00] text-white"
                         : "bg-transparent text-[#909090]"
-                    } hover:bg-[#F85E00]/[0.4] hover:text-[#000]/[0.8] flex items-center rounded-full justify-center`}
+                      } hover:bg-[#F85E00]/[0.4] hover:text-[#000]/[0.8] flex items-center rounded-full justify-center`}
                   >
                     {index + 1}
                   </button>

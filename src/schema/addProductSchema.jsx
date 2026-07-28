@@ -35,5 +35,15 @@ export const addProductSchema = Yup.object({
   ),
   browse: Yup.array()
     .required("Please provide product images.") // Required validation
-    .min(4, "You must've to select atleast four images."),
+    .min(4, "You must've to select atleast four images.")
+    .test("fileSize", "Each image size must be less than 5MB.", (files) => {
+      if (!files || !Array.isArray(files)) return true;
+      return files.every((file) => {
+        if (file instanceof File) {
+          return file.size <= 5 * 1024 * 1024;
+        }
+        return true;
+      });
+    }),
 });
+
