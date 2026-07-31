@@ -84,7 +84,7 @@ const MyProfile = () => {
             />
           </span>
 
-          <span className="text-[18px] lg:text-[24px] font-semibold absolute bottom-2 backdrop-blur-md left-28 lg:left-48 lg:leading-[36px] text-white">
+          <span className="text-[18px] lg:text-[24px] font-semibold absolute bottom-2 backdrop-blur-md left-28 lg:left-48 lg:leading-[36px] text-black">
             {profile?.name || "N/A"}
           </span>
         </div>

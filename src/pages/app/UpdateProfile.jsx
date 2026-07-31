@@ -21,6 +21,7 @@ import { updateProfileValues } from "../../data/updateProfile";
 import { updateProfileSchema } from "../../schema/updateProfileSchema";
 import EditProfileModal from "../../components/app/profile/EditProfileModal";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
+import { BsCamera } from "react-icons/bs";
 
 const LIBRARIES = ["places"];
 
