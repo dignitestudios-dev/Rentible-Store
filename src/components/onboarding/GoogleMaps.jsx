@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
   GoogleMap,
-  LoadScript,
   Marker,
   useJsApiLoader,
 } from "@react-google-maps/api";
@@ -9,9 +8,13 @@ import axios from "axios";
 import { AppContext } from "../../context/AppContext";
 import { ErrorToast } from "../global/Toaster";
 
+const LIBRARIES = ["places"];
+
 function GoogleMaps({ setAddress, address, setLatLng }) {
   const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
     googleMapsApiKey: `${import.meta.env.VITE_APP_GMAPS_KEY}`,
+    libraries: LIBRARIES,
   });
 
   const {
@@ -158,7 +161,7 @@ function GoogleMaps({ setAddress, address, setLatLng }) {
           }}
           icon={{
             url: "/map_marker.png", // Path to your custom marker
-            scaledSize: new google.maps.Size(50, 50),
+            scaledSize: window.google?.maps ? new window.google.maps.Size(50, 50) : undefined,
           }}
         ></Marker>
       </GoogleMap>

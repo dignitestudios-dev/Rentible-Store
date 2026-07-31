@@ -20,10 +20,16 @@ import { AppContext } from "../../context/AppContext";
 import { updateProfileValues } from "../../data/updateProfile";
 import { updateProfileSchema } from "../../schema/updateProfileSchema";
 import EditProfileModal from "../../components/app/profile/EditProfileModal";
-import { BsCamera } from "react-icons/bs";
-import { Autocomplete, LoadScript, useLoadScript } from "@react-google-maps/api";
+import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
+
+const LIBRARIES = ["places"];
 
 const UpdateProfile = () => {
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: import.meta.env.VITE_APP_GMAPS_KEY || "",
+    libraries: LIBRARIES,
+  });
   const location = useLocation();
   const profile = location.state;
   const {
@@ -238,9 +244,7 @@ const UpdateProfile = () => {
   };
 
   return (
-    <LoadScript googleMapsApiKey={import.meta.env.VITE_APP_GMAPS_KEY} libraries={["places"]}>
-
-      <div className="w-full h-auto flex justify-start items-start p-2 lg:p-6">
+    <div className="w-full h-auto flex justify-start items-start p-2 lg:p-6">
         <form
           onSubmit={handleSubmit}
           className="w-full h-auto rounded-[20px] p-6 flex flex-col items-center border border-gray-300 justify-start bg-white"
@@ -549,13 +553,32 @@ const UpdateProfile = () => {
                 <div className="w-full col-span-2 h-auto flex flex-col justify-start items-start gap-1">
                   <div className="h-[49px] flex justify-start bg-[#F8F8F899] items-start w-full relative rounded-[8px]">
 
-                    <Autocomplete
-                      className="w-full h-full"
-                      onLoad={(autocomplete) =>
-                        (startLocationRef.current = autocomplete)
-                      }
-                      onPlaceChanged={handlePlaceChange}
-                    >
+                    {isLoaded ? (
+                      <Autocomplete
+                        className="w-full h-full"
+                        onLoad={(autocomplete) =>
+                          (startLocationRef.current = autocomplete)
+                        }
+                        onPlaceChanged={handlePlaceChange}
+                      >
+                        <input
+                          type="text"
+                          id="address"
+                          name="address"
+                          value={values.address}
+                          onChange={(e) => {
+                            handleChange(e);
+                            setUserInput(e.target.value);
+                          }}
+                          onBlur={handleBlur}
+                          className={`w-full h-full border-[0.8px] bg-[#F8F8F899] outline-none  rounded-[8px] placeholder:text-[#959393] text-[#262626] px-3 text-[16px] font-normal leading-[20.4px] ${errors?.address && touched?.address
+                            ? "border-red-500"
+                            : "border-[#D9D9D9]"
+                            }`}
+                          placeholder="Street Address"
+                        />
+                      </Autocomplete>
+                    ) : (
                       <input
                         type="text"
                         id="address"
@@ -572,7 +595,7 @@ const UpdateProfile = () => {
                           }`}
                         placeholder="Street Address"
                       />
-                    </Autocomplete>
+                    )}
 
                   </div>
                   {errors.address && touched.address ? (
@@ -635,7 +658,6 @@ const UpdateProfile = () => {
           </Link>
         </form>
       </div>
-    </LoadScript>
   );
 };
 
